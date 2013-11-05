@@ -2,6 +2,22 @@ import os
 import settings
 import datetime as dt
 
+def scan_dir(path):
+    contents = []
+    for path, dirs, files in os.walk(path):
+        contents.append(path)
+        for f in files:
+            contents.append(path + os.sep + f)
+    return contents
+
+def remove(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+        print("rm -r " + path)
+    else:
+        os.remove(path)
+        print("rm " + orphan)
+
 def check_dir(filename):
     dirname = os.path.dirname(filename)
 

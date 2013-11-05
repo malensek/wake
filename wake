@@ -30,40 +30,9 @@ def load_module(modname):
     except AttributeError:
         print("Invalid module: " + modname, file=sys.stderr)
 
-def scan_dir(path):
-    source = []
-    for path, dirs, files in os.walk(path):
-        source.append(path)
-        for f in files:
-            source.append(path + os.sep + f)
-    return source
-
-def tidy(outmap):
-    expected = []
-    for sfile in outmap:
-        for f in outmap[sfile]:
-            expected.append(f)
-    actual = scan_dir(settings.outputdir)
-    orphans = set(actual).difference(set(expected))
-    for orphan in orphans:
-        if os.path.isdir(orphan):
-            shutil.rmtree(orphan)
-            print("rm -r " + orphan)
-        else:
-            try:
-                os.remove(orphan)
-                print("rm " + orphan)
-            except FileNotFoundError:
-                pass
-
-def check_perms(outmap):
-    for sfile in outmap:
-        for f in outmap[sfile]:
-            util.set_perms(f)
-
 def map_modules(sourcedir, modules):
     # Map source files to the modules that will process them
-    source = scan_dir(sourcedir)
+    source = util.scan_dir(sourcedir)
     modmap = defaultdict(list)
     reversemap = {}
     for sfile in source:
@@ -98,6 +67,24 @@ def check_modifications(outmap):
             if smod > omod:
                 modified.append(sfile)
     return modified
+
+def tidy(outmap):
+    expected = []
+    for sfile in outmap:
+        for f in outmap[sfile]:
+            expected.append(f)
+    actual = util.scan_dir(settings.outputdir)
+    orphans = set(actual).difference(set(expected))
+    for orphan in orphans:
+        try:
+            util.remove(orphan)
+        # Files may get removed from a 'rm -r' on a directory
+        except FileNotFoundError: pass
+
+def check_perms(outmap):
+    for sfile in outmap:
+        for f in outmap[sfile]:
+            util.set_perms(f)
 
 def main():
     parser = argparse.ArgumentParser()
