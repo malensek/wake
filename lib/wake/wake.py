@@ -12,6 +12,7 @@ import wake.util as util
 
 
 def load_modules():
+    """Loads wake modules.  Priority is determined by the PYTHONPATH."""
     if not util.has_setting("modules"):
         return []
 
@@ -24,6 +25,7 @@ def load_modules():
     return modules
 
 def load_module(modname):
+    """Imports modules under the wake.modules package."""
     module = importlib.import_module("wake.modules." + modname)
     try:
         if module.is_module():
@@ -33,7 +35,7 @@ def load_module(modname):
         print("Invalid module: " + modname, file=sys.stderr)
 
 def map_modules(sourcedir, modules):
-    # Map source files to the modules that will process them
+    """Maps source files to the modules that will process them"""
     source = util.scan_dir(sourcedir)
     modmap = defaultdict(list)
     reversemap = {}
@@ -48,7 +50,7 @@ def map_modules(sourcedir, modules):
     return modmap, reversemap
 
 def map_outputs(modules, modmap):
-    # Map source files to their output file(s)
+    """Maps source files to their output file(s)"""
     outmap = {}
     for module in modules:
         for sfile in modmap[module.name()]:
@@ -57,7 +59,7 @@ def map_outputs(modules, modmap):
     return outmap
 
 def check_modifications(outmap):
-    # Determine files that have been modified (or new files)
+    """Determines the files have been modified (or added)"""
     modified = []
     for sfile in outmap:
         smod = os.path.getctime(sfile)
@@ -71,6 +73,9 @@ def check_modifications(outmap):
     return modified
 
 def tidy(outmap):
+    """Cleans up 'orphaned' files in the output directory: files that are no
+    longer owned/produced by an active module.
+    """
     expected = []
     for sfile in outmap:
         for f in outmap[sfile]:
@@ -85,11 +90,18 @@ def tidy(outmap):
         except FileNotFoundError: pass
 
 def check_perms(outmap):
+    """Verifies that the output files' permissions are correct"""
     for sfile in outmap:
         for f in outmap[sfile]:
             util.set_perms(f)
 
 def build(num_threads):
+    """Builds a wake site.
+
+    Keyword arguments:
+    num_threads --- Number of worker threads to use to build the site
+    """
+
     modules = load_modules()
     if not modules:
         print("No modules were loaded!  Exiting.", file=sys.stderr)
