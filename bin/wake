@@ -16,11 +16,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--num-threads', nargs='?', type=int,
             default=multiprocessing.cpu_count())
-    parser.add_argument('-d', '--dry-run', action='store_true', default=False)
     args = parser.parse_args()
 
     import wake.wake as wakelib
-    wakelib.build(args.num_threads)
+    wakelib.build(num_threads=args.num_threads)
 
 if __name__ == "__main__":
     main()
