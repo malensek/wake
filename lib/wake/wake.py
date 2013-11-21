@@ -12,7 +12,11 @@ import wake.util as util
 
 
 def load_modules():
-    """Loads wake modules.  Priority is determined by the PYTHONPATH."""
+    """Load wake modules.  Priority is determined by the PYTHONPATH.
+
+    Returns:
+        dict of loaded modules
+    """
     if not util.has_setting("modules"):
         return []
 
@@ -25,7 +29,13 @@ def load_modules():
     return modules
 
 def load_module(modname):
-    """Imports modules under the wake.modules package."""
+    """Import a module under the wake.modules package.
+
+    Args:
+        modname: name of the module to load
+    Returns:
+        loaded module instance
+    """
     module = importlib.import_module("wake.modules." + modname)
     try:
         if module.is_module():
@@ -34,8 +44,16 @@ def load_module(modname):
     except AttributeError:
         print("Invalid module: " + modname, file=sys.stderr)
 
-def map_modules(sourcedir, modules):
-    """Maps source files to the modules that will process them"""
+def map_modules(modules, sourcedir):
+    """Map source files to the modules that will process them.
+
+    Args:
+        sourcedir (str): directory containing source files
+        modules (list): loaded modules
+    Returns:
+        tuple with module map (module name -> source file) and
+        reverse map (source file -> module name) dicts.
+    """
     source = util.scan_dir(sourcedir)
     modmap = defaultdict(list)
     reversemap = {}
@@ -50,7 +68,14 @@ def map_modules(sourcedir, modules):
     return modmap, reversemap
 
 def map_outputs(modules, modmap):
-    """Maps source files to their output file(s)"""
+    """Map source files to their output file(s).
+
+    Args:
+        modules (list): loaded modules
+        modmap (dict): module -> source file mappings
+    Returns:
+        dict mapping source files to output files
+    """
     outmap = {}
     for module in modules:
         for sfile in modmap[module.name()]:
@@ -59,7 +84,13 @@ def map_outputs(modules, modmap):
     return outmap
 
 def check_modifications(outmap):
-    """Determines the files have been modified (or added)"""
+    """Find new or modified files.
+
+    Args:
+        outmap: source -> output mappings
+    Returns:
+        list of modified or new files
+    """
     modified = []
     for sfile in outmap:
         smod = os.path.getctime(sfile)
@@ -73,8 +104,12 @@ def check_modifications(outmap):
     return modified
 
 def tidy(outmap):
-    """Cleans up 'orphaned' files in the output directory: files that are no
-    longer owned/produced by an active module.
+    """Clean up 'orphaned' files in the output directory (files that are no
+    longer owned/produced by an active module).
+
+    Args:
+        outmap (dict): source -> output mappings.  Files in the output directory
+                that are not in this dict are removed.
     """
     expected = []
     for sfile in outmap:
@@ -90,16 +125,15 @@ def tidy(outmap):
         except FileNotFoundError: pass
 
 def check_perms(outmap):
-    """Verifies that the output files' permissions are correct"""
+    """Verify output files' permissions match settings.{filemode,dirmode}."""
     for sfile in outmap:
         for f in outmap[sfile]:
             util.set_perms(f)
 
-def build(num_threads):
-    """Builds a wake site.
+def build(num_threads=1):
+    """Build a wake site.
 
-    Keyword arguments:
-    num_threads --- Number of worker threads to use to build the site
+        num_threads: Number of worker threads to use to build the site
     """
 
     modules = load_modules()
@@ -110,10 +144,11 @@ def build(num_threads):
     print("Thread pool size: " + str(num_threads))
 
     sourcedir = util.check_setting("sourcedir", "./source")
-    modmap, reversemap = map_modules(sourcedir, modules)
+    modmap, reversemap = map_modules(modules, sourcedir)
     outmap = map_outputs(modules, modmap)
-
     modified = check_modifications(outmap)
+
+    # Start processing
     pool = multiprocessing.Pool(processes=num_threads)
     workers = []
     for sfile in modified:
