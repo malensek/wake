@@ -165,3 +165,13 @@ def build(num_threads=1):
     check_perms(outmap)
 
     print("Build complete.")
+
+def upload():
+    command = util.check_setting("upload_command", "")
+    if command == "":
+        print("Please configure upload_command.")
+        return
+
+    from subprocess import call
+    call(command)
+
