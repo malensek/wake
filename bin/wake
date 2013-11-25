@@ -14,12 +14,16 @@ sys.path.insert(0, sitepath)
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--num-threads', nargs='?', type=int,
+    parser.add_argument("subcommand", nargs="?")
+    parser.add_argument("-t", "--num-threads", nargs="?", type=int,
             default=multiprocessing.cpu_count())
     args = parser.parse_args()
 
     import wake.wake as wakelib
-    wakelib.build(num_threads=args.num_threads)
+    if args.subcommand == 'up':
+        wakelib.upload()
+    else:
+        wakelib.build(num_threads=args.num_threads)
 
 if __name__ == "__main__":
     main()
