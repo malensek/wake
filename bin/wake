@@ -19,6 +19,14 @@ def main():
             default=multiprocessing.cpu_count())
     args = parser.parse_args()
 
+    # Check for a configuration file
+    try:
+        import wake.settings as settings
+    except:
+        print("Could not import wake settings.  Is this a wake site directory?")
+        exit(1)
+
+
     import wake.wake as wakelib
     if args.subcommand == 'up':
         wakelib.upload()
