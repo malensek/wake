@@ -1,6 +1,6 @@
 # Directories
-#sourcedir = "../source"
-#outputdir = "../output"
+sourcedir = "../source"
+outputdir = "../output"
 #templatedir = "../templates"
 
 # Remote (production environment) settings
