@@ -17,7 +17,7 @@ def remove(path):
         print("rm -r " + path)
     else:
         os.remove(path)
-        print("rm " + orphan)
+        print("rm " + path)
 
 def check_dir(filename):
     dirname = os.path.dirname(filename)
