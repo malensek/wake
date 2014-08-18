@@ -4,9 +4,6 @@ import shutil
 import wake.settings as settings
 import wake.util as util
 
-def is_module():
-    return True
-
 def name():
     return "dir"
 

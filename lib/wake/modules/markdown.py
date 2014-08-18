@@ -9,9 +9,6 @@ markdown_extras = util.check_setting("markdown_extras",
         ["metadata", "fenced-code-blocks", "smarty-pants"])
 markdown_template = util.check_setting("markdown_template", "markdown.html")
 
-def is_module():
-    return True
-
 def name():
     return "markdown"
 
