@@ -36,9 +36,8 @@ def load_module(modname):
     """
     module = importlib.import_module("wake.modules." + modname)
     try:
-        if module.is_module():
-            name = module.name()
-            return module
+        name = module.name()
+        return module
     except AttributeError:
         print("Invalid module: " + modname, file=sys.stderr)
 
