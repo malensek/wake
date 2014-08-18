@@ -10,7 +10,7 @@ import wake.util as util
 
 def load_modules():
     """Load wake modules.  Priority is determined by the order defined in the
-    wakefile.
+    wake settings file.
 
     Returns:
         dict of loaded modules
