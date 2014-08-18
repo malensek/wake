@@ -1,14 +1,21 @@
 import os
 import datetime as dt
+import re
 
 import wake.settings as settings
 
 def scan_dir(path):
+    excludes = check_setting("exclude_files", [])
     contents = []
     for path, dirs, files in os.walk(path):
         contents.append(path)
         for f in files:
-            contents.append(path + os.sep + f)
+            for ex in excludes:
+                if re.search(ex, f):
+                    print("Ignoring '%s' (matched rule: %s)" % (f, ex))
+                    break
+            else:
+                contents.append(path + os.sep + f)
     return contents
 
 def remove(path):
@@ -21,10 +28,8 @@ def remove(path):
 
 def check_dir(filename):
     dirname = os.path.dirname(filename)
-
     if dirname is '':
         return
-
     try:
         if not os.path.exists(dirname):
             os.makedirs(dirname)
