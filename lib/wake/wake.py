@@ -127,6 +127,15 @@ def check_perms(outmap):
         for f in outmap[sfile]:
             util.set_perms(f)
 
+def outputs_exist(outmap):
+    exist = True
+    for sfile in outmap:
+        for f in outmap[sfile]:
+            if not os.path.exists(f):
+                print("Missing: " + f)
+                exist = False
+    return exist
+
 def build(num_threads=1):
     """Build a wake site.
 
@@ -156,6 +165,11 @@ def build(num_threads=1):
         worker.wait()
         # Report errors:
         worker.get()
+
+    print("Verifying outputs...")
+    if outputs_exist(outmap) is not True:
+        print("Not all outputs were generated!  Stopping.")
+        return
 
     print("Removing orphaned files...")
     tidy(outmap)
