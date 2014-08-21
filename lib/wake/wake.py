@@ -56,8 +56,7 @@ def map_modules(modules, sourcedir):
     reversemap = {}
     for sfile in source:
         for module in modules:
-            name, ext = os.path.splitext(sfile)
-            if module.wants(name, ext):
+            if module.wants(sfile):
                 modname = module.name()
                 modmap[modname].append(sfile)
                 reversemap[sfile] = module
@@ -76,8 +75,7 @@ def map_outputs(modules, modmap):
     outmap = {}
     for module in modules:
         for sfile in modmap[module.name()]:
-            name, ext = os.path.splitext(sfile)
-            outmap[sfile] = module.produces(name, ext)
+            outmap[sfile] = module.produces(sfile)
     return outmap
 
 def check_modifications(outmap):

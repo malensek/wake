@@ -1,18 +1,14 @@
 import os
-import shutil
-
-import wake.settings as settings
 import wake.util as util
 
 def name():
     return "dir"
 
-def wants(filename, ext):
-    fullpath = filename + ext
-    return os.path.isdir(fullpath)
+def wants(filename):
+    return os.path.isdir(filename)
 
-def produces(filename, ext):
-    return [filename.replace(settings.sourcedir, settings.outputdir) + ext]
+def produces(filename):
+    return [util.src2out(filename)]
 
 def process(args):
     pass

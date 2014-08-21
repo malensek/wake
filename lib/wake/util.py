@@ -18,6 +18,12 @@ def scan_dir(path):
                 contents.append(path + os.sep + f)
     return contents
 
+def src2out(filename):
+    return filename.replace(settings.sourcedir, settings.outputdir)
+
+def ext_of(filename):
+    return os.path.splitext(filename)[1]
+
 def remove(path):
     if os.path.isdir(path):
         shutil.rmtree(path)

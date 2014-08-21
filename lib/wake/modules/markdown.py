@@ -12,18 +12,18 @@ markdown_template = util.check_setting("markdown_template", "markdown.html")
 def name():
     return "markdown"
 
-def wants(filename, ext):
-    return ext == ".md"
+def wants(filename):
+    return util.ext_of(filename) == '.md'
 
-def produces(filename, ext):
-    return [filename.replace(settings.sourcedir, settings.outputdir) + ".html"]
+def produces(filename):
+    basename, _ = os.path.splitext(filename)
+    return [util.src2out(basename) + ".html"]
 
-def process(args):
-    filename, ext = os.path.splitext(args)
-    outfile = produces(filename, ext)[0]
+def process(filename):
+    outfile = produces(filename)
     util.check_dir(outfile)
 
-    fin = open(filename + ext)
+    fin = open(filename)
 
     contents = fin.read()
     mdtext = md.markdown(contents, extras=markdown_extras)

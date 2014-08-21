@@ -1,23 +1,18 @@
-import os
 import shutil
-
-import wake.settings as settings
 import wake.util as util
 
 def name():
     return "copy"
 
-def wants(filename, ext):
+def wants(filename):
     # The copy module is a catch-all:
     return True
 
-def produces(filename, ext):
-    return [filename.replace(settings.sourcedir, settings.outputdir) + ext]
+def produces(filename):
+    return [util.src2out(filename)]
 
-def process(args):
-    filename, ext = os.path.splitext(args)
-    infile = args
-    outfile = produces(filename, ext)[0]
+def process(filename):
+    outfile = produces(filename)[0]
     util.check_dir(outfile)
-    shutil.copy(infile, outfile)
-    print("cp " + infile + " -> " + outfile)
+    shutil.copy(filename, outfile)
+    print("cp " + filename + " -> " + outfile)
