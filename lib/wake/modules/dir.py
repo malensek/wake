@@ -10,5 +10,5 @@ def wants(filename):
 def produces(filename):
     return [util.src2out(filename)]
 
-def process(args):
+def process(filename):
     pass
