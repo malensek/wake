@@ -40,7 +40,7 @@ def process(filename):
     html = template.render(content=mdtext, metadata=mdtext.metadata,
             title=title)
 
-    print("markdown: " + args + " -> " + outfile)
+    print("markdown: " + filename + " -> " + outfile)
     fout = open(outfile, 'w')
     fout.write(html)
     fout.close()
