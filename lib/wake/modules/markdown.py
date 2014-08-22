@@ -20,7 +20,7 @@ def produces(filename):
     return [util.src2out(basename) + ".html"]
 
 def process(filename):
-    outfile = produces(filename)
+    outfile = produces(filename)[0]
     util.check_dir(outfile)
 
     fin = open(filename)
