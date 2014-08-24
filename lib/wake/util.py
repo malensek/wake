@@ -5,6 +5,12 @@ import re
 import wake.settings as settings
 
 def scan_dir(path):
+    """Recursively walk a directory tree, finding all its contents (files and
+    directories). Files/directories in the exclude_files setting are ignored.
+
+    Returns:
+        List of directory contents (full paths)
+    """
     excludes = check_setting("exclude_files", [])
     contents = []
     for path, dirs, files in os.walk(path):
