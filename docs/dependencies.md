@@ -1,9 +1,13 @@
-wake dependencies
+wake Dependencies
 =================
 * python3
 * jinja2
 * python-markdown2
-* pygments
 
-wake can also be used with other template engines or markup converters (mako,
-textile, etc) but the default modules have the requirements listed above.
+Optional Dependencies
+=====================
+* pygments (for code highlighting)
+* Pillow [Python Imaging Library] (for gallery module)
+
+wake could also be used with other template engines or markup converters (mako,
+textile, etc) but the default set of modules have the requirements listed above.
