@@ -1,12 +1,13 @@
 from jinja2 import Environment, FileSystemLoader
-import markdown2 as md
+import markdown
 import os
 
 import wake.settings as settings
 import wake.util as util
 
-markdown_extras = util.check_setting("markdown_extras",
-        ["metadata", "fenced-code-blocks", "smarty-pants"])
+markdown_extensions = util.check_setting("markdown_extensions",
+        ["markdown.extensions.meta", "markdown.extensions.smarty",
+        "markdown.extensions.fenced_code", "markdown.extensions.codehilite"])
 markdown_template = util.check_setting("markdown_template", "markdown.html")
 
 def name():
@@ -26,18 +27,19 @@ def process(filename):
     fin = open(filename)
 
     contents = fin.read()
-    mdtext = md.markdown(contents, extras=markdown_extras)
+    md = markdown.Markdown(extensions=markdown_extensions)
+    mdtext = md.convert(contents)
 
     jinja = Environment(loader=FileSystemLoader(settings.templatedir))
     jinja.globals["settings"] = settings
     template = jinja.get_template(markdown_template)
 
     title = ""
-    if "title" in mdtext.metadata:
-        title = mdtext.metadata["title"]
+    if "title" in md.Meta:
+        title = md.Meta["title"][0]
     title = util.title(title)
 
-    html = template.render(content=mdtext, metadata=mdtext.metadata,
+    html = template.render(content=mdtext, metadata=md.Meta,
             title=title)
 
     print("markdown: " + filename + " -> " + outfile)
