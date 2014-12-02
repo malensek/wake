@@ -2,7 +2,7 @@ wake Dependencies
 =================
 * python3
 * jinja2
-* python-markdown2
+* Markdown
 
 Optional Dependencies
 =====================
