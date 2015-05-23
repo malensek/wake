@@ -1,0 +1,4 @@
+#parse("page_top.vm")
+#parse("menu.vm")
+
+#parse("page_bottom.vm")
