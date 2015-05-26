@@ -30,21 +30,21 @@ public class Launcher {
         System.exit(0);
         */
 
-        /*
         ForkJoinPool fjp = new ForkJoinPool(
                 Runtime.getRuntime().availableProcessors(),
                 new WorkerThreadFactory(), null, false);
-        */
 
         String source = Configuration.getSourceDir().getAbsolutePath();
-        List<Task> tasks = Files.walk(Paths.get(source))
+        fjp.submit(() ->
+        Files.walk(Paths.get(source))
             .parallel()
             .filter(Files::isRegularFile)
             .map(path -> new Task(path))
             .filter(task -> task.needsExecution())
-            .forEach(task -> task.
             .collect(Collectors.toList())
+        ).get();
 
+        System.out.println("goodbye");
         System.exit(0);
 
         VelocityEngine ve = new VelocityEngine();
