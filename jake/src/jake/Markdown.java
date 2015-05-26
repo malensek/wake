@@ -3,9 +3,16 @@ package jake;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pegdown.PegDownProcessor;
+
 public class Markdown implements Plugin {
 
+    /* Markdown files only have a single dependency other than themselves: the
+     * markdown template. We cache this information here instead of creating a
+     * new list each time requires() is called. */
     private List<WakeFile> dependencies;
+
+    private PegDownProcessor pdp = new PegDownProcessor();
 
     public Markdown() {
         dependencies = new ArrayList<>();
@@ -31,9 +38,10 @@ public class Markdown implements Plugin {
 
     @Override
     public List<WakeFile> produces(WakeFile file) {
-        String name = file.getNameWithoutExtension();
-        name = name + ".md";
-        WakeFile output = new WakeFile(file.getAbsolutePath() + "/" + name);
+        WakeFile out = file.getOutputFile();
+        String name = out.getNameWithoutExtension();
+        name = name + ".html";
+        WakeFile output = new WakeFile(out.getParent() + "/" + name);
 
         ArrayList<WakeFile> outputs = new ArrayList<>();
         outputs.add(output);
