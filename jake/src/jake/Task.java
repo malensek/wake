@@ -1,7 +1,11 @@
 package jake;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.List;
 
 public class Task {
 
@@ -16,7 +20,26 @@ public class Task {
     }
 
     public boolean needsExecution() {
-        return true;
+        Plugin plugin = determinePlugin();
+
+        List<WakeFile> outputs = plugin.produces(taskFile);
+        List<WakeFile> dependencies = plugin.requires(taskFile);
+
+        for (WakeFile dependency : dependencies) {
+            if (dependency.exists() == false) {
+                /* TODO Warn the user that a dep wasn't fulfilled */
+                return false;
+            }
+        }
+
+        long oldestOutChange = oldestChange(outputs);
+        long newestDepChange = newestChange(dependencies);
+        long sourceChange = changeTime(taskFile);
+
+        return (sourceChange > oldestOutChange
+                || newestDepChange > oldestOutChange);
+    }
+
     private long newestChange(List<WakeFile> files) {
         long newest = Long.MIN_VALUE;
 
