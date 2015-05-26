@@ -58,5 +58,16 @@ public class Task {
 
         return ft.toMillis();
     }
+
+    private Plugin determinePlugin() {
+        List<Plugin> plugins
+            = ((WorkerThread) Thread.currentThread()).getPlugins();
+
+        for (Plugin plugin : plugins) {
+            if (plugin.wants(taskFile)) {
+                return plugin;
+            }
+        }
+        return null;
     }
 }
