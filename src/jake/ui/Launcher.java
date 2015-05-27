@@ -1,12 +1,12 @@
 package jake.ui;
 
-import jake.Configuration;
-import jake.Task;
-import jake.WorkerThreadFactory;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.ForkJoinPool;
+
+import jake.core.Configuration;
+import jake.core.Task;
+import jake.exec.WorkerThreadFactory;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {
