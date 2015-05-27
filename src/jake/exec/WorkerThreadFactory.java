@@ -1,4 +1,4 @@
-package jake;
+package jake.exec;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;

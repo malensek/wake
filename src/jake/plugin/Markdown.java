@@ -1,4 +1,4 @@
-package jake;
+package jake.plugin;
 
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -10,11 +10,13 @@ import java.util.Map;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
+
+import jake.core.Configuration;
+import jake.core.WakeFile;
 
 public class Markdown implements Plugin {
 
