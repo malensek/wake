@@ -1,12 +1,12 @@
 package jake.exec;
 
+import jake.core.Plugin;
+import jake.plugins.Markdown;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
-
-import jake.plugin.Markdown;
-import jake.plugin.Plugin;
 
 public class WorkerThread extends ForkJoinWorkerThread {
 

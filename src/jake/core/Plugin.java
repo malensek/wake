@@ -1,6 +1,4 @@
-package jake.plugin;
-
-import jake.core.WakeFile;
+package jake.core;
 
 import java.util.List;
 

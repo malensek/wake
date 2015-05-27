@@ -1,4 +1,4 @@
-package jake.core;
+package jake.exec;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 
-import jake.exec.WorkerThread;
-import jake.plugin.Plugin;
+import jake.core.Plugin;
+import jake.core.WakeFile;
 
 public class Task {
 

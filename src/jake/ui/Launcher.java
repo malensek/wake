@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.ForkJoinPool;
 
 import jake.core.Configuration;
-import jake.core.Task;
+import jake.exec.Task;
 import jake.exec.WorkerThreadFactory;
 
 public class Launcher {
