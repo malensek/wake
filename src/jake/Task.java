@@ -9,7 +9,8 @@ import java.util.List;
 
 public class Task {
 
-    public WakeFile taskFile;
+    private WakeFile taskFile;
+    private Plugin plugin;
 
     public Task(File file) {
         this.taskFile = new WakeFile(file.getAbsolutePath());
@@ -20,7 +21,11 @@ public class Task {
     }
 
     public boolean needsExecution() {
-        Plugin plugin = determinePlugin();
+        plugin = determinePlugin();
+        if (plugin == null) {
+            //System.out.println("Could not determine plugin!");
+            return false;
+        }
 
         List<WakeFile> outputs = plugin.produces(taskFile);
         List<WakeFile> dependencies = plugin.requires(taskFile);
@@ -38,6 +43,18 @@ public class Task {
 
         return (sourceChange > oldestOutChange
                 || newestDepChange > oldestOutChange);
+    }
+
+    public void execute() {
+        if (plugin == null) {
+            System.out.println("No plugin found for file: " + taskFile);
+        }
+
+        try {
+            plugin.process(taskFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private long newestChange(List<WakeFile> files) {

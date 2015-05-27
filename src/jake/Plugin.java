@@ -28,5 +28,5 @@ public interface Plugin {
      * Processes the given file, producing the outputs specified by the
      * produces() method.
      */
-    public void process(WakeFile file);
+    public void process(WakeFile file) throws Exception;
 }
