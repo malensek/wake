@@ -13,7 +13,7 @@ public class WakeFile extends File {
         super(path.toFile().getAbsolutePath());
     }
 
-    public WakeFile(WakeFile parent, String path) {
+    public WakeFile(File parent, String path) {
         super(parent, path);
     }
 

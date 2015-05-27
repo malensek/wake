@@ -32,8 +32,8 @@ public class Markdown implements Plugin {
 
     public Markdown() {
         dependencies = new ArrayList<>();
-        WakeFile tempDir = Configuration.getTemplateDir();
-        WakeFile template = new WakeFile(tempDir, "markdown.vm");
+        WakeFile template = new WakeFile(
+                Configuration.getTemplateDir(), "markdown.vm");
         dependencies.add(template);
 
         velocityEngine = new VelocityEngine();
