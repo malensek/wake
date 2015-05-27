@@ -84,6 +84,9 @@ public class Markdown implements Plugin {
             /* Read YAML front matter */
             YamlReader yaml = new YamlReader(content);
             yamlData = (Map<?, ?>) yaml.read();
+
+            /* Trim past the 2nd YAML delimiter */
+            content = content.substring(content.indexOf("---", 3) + 3);
         }
 
         VelocityContext context = new VelocityContext(yamlData);
