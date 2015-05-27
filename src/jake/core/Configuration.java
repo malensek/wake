@@ -1,15 +1,13 @@
-package jake;
-
-import java.io.File;
+package jake.core;
 
 public class Configuration {
 
-    public static File getSourceDir() {
-        return new File("source");
+    public static WakeFile getSourceDir() {
+        return new WakeFile("source");
     }
 
-    public static File getOutputDir() {
-        return new File("output");
+    public static WakeFile getOutputDir() {
+        return new WakeFile("output");
     }
 
     public static WakeFile getTemplateDir() {

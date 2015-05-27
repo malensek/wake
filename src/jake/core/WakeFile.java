@@ -1,4 +1,4 @@
-package jake;
+package jake.core;
 
 import java.io.File;
 import java.nio.file.Path;

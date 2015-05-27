@@ -1,4 +1,4 @@
-package jake;
+package jake.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
+
+import jake.Plugin;
 
 public class Task {
 
