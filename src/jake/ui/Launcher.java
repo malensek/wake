@@ -1,8 +1,11 @@
 package jake.ui;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 import jake.core.Configuration;
 import jake.exec.Task;
@@ -16,9 +19,13 @@ public class Launcher {
                 new WorkerThreadFactory(), null, false);
 
         String sourceDir = Configuration.getSourceDir().getAbsolutePath();
+        List<Path> paths =
+            Files.walk(Paths.get(sourceDir))
+            .collect(Collectors.toList());
+
         fjp.submit(() -> {
             try {
-                Files.walk(Paths.get(sourceDir))
+                paths.stream()
                 .parallel()
                 .filter(Files::isRegularFile)
                 .map(path -> new Task(path))
