@@ -91,6 +91,8 @@ public class Markdown implements Plugin {
 
         VelocityContext context = new VelocityContext(yamlData);
 
+        Configuration.getTitleMaker().makeTitle(context, file);
+
         String html = markdownProcessor.markdownToHtml(content);
         context.put("markdown_content", html);
 
