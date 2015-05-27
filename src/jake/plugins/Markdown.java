@@ -95,7 +95,7 @@ public class Markdown implements Plugin {
         context.put("markdown_content", html);
 
         WakeFile outputFile = produces(file).get(0);
-        outputFile.getParentFile().mkdirs();
+        outputFile.mkParentDir();
         FileWriter writer = new FileWriter(outputFile);
         markdownTemplate.merge(context, writer);
         writer.close();
