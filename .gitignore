@@ -1,0 +1,19 @@
+# Eclipse files
+.project
+.classpath
+.build
+
+# Local dev files
+classes
+depcache
+build.properties
+
+# Platform-specific stuff
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Binaries
+bin
