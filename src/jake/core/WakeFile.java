@@ -35,6 +35,16 @@ public class WakeFile extends File {
         return name.substring(0, dotIndex);
     }
 
+    public String getRelativePath() {
+        String absPath = this.getAbsolutePath();
+        String pwd = new File("").getAbsolutePath();
+        String rel = absPath.replace(pwd, "");
+        if (rel.startsWith("/") || rel.startsWith("\\")) {
+            rel = rel.substring(1);
+        }
+        return rel;
+    }
+
     public void mkParentDir() {
         this.getParentFile().mkdirs();
     }
