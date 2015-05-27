@@ -1,6 +1,7 @@
 package jake.exec;
 
 import jake.core.Plugin;
+import jake.plugins.Copy;
 import jake.plugins.Markdown;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class WorkerThread extends ForkJoinWorkerThread {
         super(pool);
         plugins = new ArrayList<>();
         plugins.add(new Markdown());
+        plugins.add(new Copy());
     }
 
     public List<Plugin> getPlugins() {
