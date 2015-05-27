@@ -7,7 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 
-import jake.Plugin;
+import jake.exec.WorkerThread;
+import jake.plugin.Plugin;
 
 public class Task {
 

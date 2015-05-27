@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 
-import jake.Markdown;
-import jake.Plugin;
+import jake.plugin.Markdown;
+import jake.plugin.Plugin;
 
 public class WorkerThread extends ForkJoinWorkerThread {
 
