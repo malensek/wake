@@ -35,6 +35,10 @@ public class WakeFile extends File {
         return name.substring(0, dotIndex);
     }
 
+    public void mkParentDir() {
+        this.getParentFile().mkdirs();
+    }
+
     public WakeFile getOutputFile() {
         String absPath = getAbsolutePath();
         String outString = absPath.replace(
