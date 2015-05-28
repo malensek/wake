@@ -101,5 +101,9 @@ public class Markdown implements Plugin {
         FileWriter writer = new FileWriter(outputFile);
         markdownTemplate.merge(context, writer);
         writer.close();
+
+        System.out.println(this.name() + ": "
+                + file.getRelativePath() + " -> "
+                + outputFile.getRelativePath());
     }
 }
