@@ -1,9 +1,9 @@
 <?xml version="1.0" standalone="yes"?>
 
-<project name="jake" basedir="." default="jar">
+<project name="wake" basedir="." default="jar">
     <!-- Build properties -->
     <property name="project.version" value="1.0"/>
-    <property name="project.url" value="http://matthew.malensek.net/projects/jake"/>
+    <property name="project.url" value="http://matthew.malensek.net/projects/wake"/>
     <tstamp>
         <format property="build.date" pattern="MM-dd-yyyy"/>
     </tstamp>
@@ -17,6 +17,7 @@
     <property name="depcache" value="depcache"/>
     <property name="jar.name"
             value="${ant.project.name}-${project.version}.jar"/>
+    <property name="jar.mainclass" value="wake.ui.Launcher"/>
     <property file="build.properties"/>
 
     <path id="classpath">
@@ -42,7 +43,7 @@
             <!-- These can be enabled selectively using ant command line options
               (-Dbuild.tests=true) or you can override these properties by
               creating a build.properties file for your local environment -->
-            <exclude name="jake/test/**" unless="${build.tests}"/>
+            <exclude name="wake/test/**" unless="${build.tests}"/>
         </javac>
     </target>
 
@@ -70,7 +71,7 @@
                 <attribute name="Specification-Version" value="${project.version}"/>
                 <attribute name="Specification-URL" value="${project.url}"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
-                <attribute name="Main-Class" value="jake.ui.Launcher"/>
+                <attribute name="Main-Class" value="${jar.mainclass}"/>
             </manifest>
         </jar>
 
