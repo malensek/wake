@@ -1,4 +1,4 @@
-package jake.ui;
+package wake.ui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
-import jake.core.Configuration;
-import jake.exec.Task;
-import jake.exec.WorkerThreadFactory;
+import wake.core.Configuration;
+import wake.exec.Task;
+import wake.exec.WorkerThreadFactory;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {

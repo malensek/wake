@@ -1,11 +1,11 @@
-package jake.plugins;
+package wake.plugins;
 
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import jake.core.Plugin;
-import jake.core.WakeFile;
+import wake.core.Plugin;
+import wake.core.WakeFile;
 
 public class Copy implements Plugin {
 

@@ -1,8 +1,8 @@
-package jake.exec;
+package wake.exec;
 
-import jake.core.Plugin;
-import jake.plugins.Copy;
-import jake.plugins.Markdown;
+import wake.core.Plugin;
+import wake.plugins.Copy;
+import wake.plugins.Markdown;
 
 import java.util.ArrayList;
 import java.util.List;

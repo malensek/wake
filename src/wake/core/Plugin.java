@@ -1,4 +1,4 @@
-package jake.core;
+package wake.core;
 
 import java.util.List;
 

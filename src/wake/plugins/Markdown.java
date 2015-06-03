@@ -1,4 +1,4 @@
-package jake.plugins;
+package wake.plugins;
 
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -15,9 +15,9 @@ import org.pegdown.PegDownProcessor;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 
-import jake.core.Configuration;
-import jake.core.Plugin;
-import jake.core.WakeFile;
+import wake.core.Configuration;
+import wake.core.Plugin;
+import wake.core.WakeFile;
 
 public class Markdown implements Plugin {
 
