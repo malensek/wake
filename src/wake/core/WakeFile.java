@@ -5,6 +5,8 @@ import java.nio.file.Path;
 
 public class WakeFile extends File {
 
+    private static final long serialVersionUID = -2874340808369948981L;
+
     public WakeFile(String path) {
         super(path);
     }
