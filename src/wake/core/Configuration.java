@@ -70,4 +70,9 @@ public class Configuration {
 
         return new File(defaultName);
     }
+
+    private static String readSetting(String settingName, Map<?, ?> config) {
+        Map<?, ?> settings = (Map<?, ?>) config.get("settings");
+        return (String) settings.get(settingName);
+    }
 }
