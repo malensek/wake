@@ -15,7 +15,7 @@ public class Configuration {
     private static File outputDir;
     private static File templateDir;
 
-    private static TitleMaker titleMaker = new DashedTitle("Matthew Malensek");
+    private static TitleMaker titleMaker;
 
     static {
         String settingsData = "";
@@ -41,6 +41,12 @@ public class Configuration {
         outputDir = readDirConfig("output", yamlData);
         templateDir = readDirConfig("templates", yamlData);
 
+        String baseTitle = readSetting("basetitle", yamlData);
+        if (baseTitle != null) {
+            titleMaker = new DashedTitle(baseTitle);
+        } else {
+            titleMaker = new BasicTitle();
+        }
     }
 
     public static File getSourceDir() {
