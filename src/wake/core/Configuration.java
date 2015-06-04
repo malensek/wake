@@ -59,8 +59,8 @@ public class Configuration {
         return titleMaker;
     }
 
-    private static File readDirConfig(String defaultName, Map<?, ?> dirData) {
-        Map<?, ?> dirs = (Map<?, ?>) dirData.get("directories");
+    private static File readDirConfig(String defaultName, Map<?, ?> config) {
+        Map<?, ?> dirs = (Map<?, ?>) config.get("directories");
         if (dirs != null) {
             String customDir = (String) dirs.get(defaultName);
             if (customDir != null) {
