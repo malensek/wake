@@ -66,6 +66,10 @@ public class Configuration {
     }
 
     private static File readDirConfig(String defaultName, Map<?, ?> config) {
+        if (config == null) {
+            return new File(defaultName);
+        }
+
         Map<?, ?> dirs = (Map<?, ?>) config.get("directories");
         if (dirs != null) {
             String customDir = (String) dirs.get(defaultName);
@@ -78,6 +82,9 @@ public class Configuration {
     }
 
     private static String readSetting(String settingName, Map<?, ?> config) {
+        if (config == null) {
+            return null;
+        }
         Map<?, ?> settings = (Map<?, ?>) config.get("settings");
         return (String) settings.get(settingName);
     }
