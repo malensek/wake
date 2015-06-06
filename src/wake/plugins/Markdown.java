@@ -31,14 +31,16 @@ public class Markdown implements Plugin {
     private Template markdownTemplate;
 
     public Markdown() {
+        Configuration config = Configuration.instance();
+
         dependencies = new ArrayList<>();
         WakeFile template = new WakeFile(
-                Configuration.getTemplateDir(), "markdown.vm");
+                config.getTemplateDir(), "markdown.vm");
         dependencies.add(template);
 
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("file.resource.loader.path",
-                Configuration.getTemplateDir().getAbsolutePath());
+                config.getTemplateDir().getAbsolutePath());
         velocityEngine.init();
         markdownTemplate = velocityEngine.getTemplate(
                 template.getName());
@@ -63,7 +65,7 @@ public class Markdown implements Plugin {
 
     @Override
     public List<WakeFile> produces(WakeFile file) {
-        WakeFile out = file.getOutputFile();
+        WakeFile out = file.toOutputFile();
         String name = out.getNameWithoutExtension();
         name = name + ".html";
         WakeFile output = new WakeFile(out.getParent() + "/" + name);
@@ -91,7 +93,7 @@ public class Markdown implements Plugin {
 
         VelocityContext context = new VelocityContext(yamlData);
 
-        Configuration.getTitleMaker().makeTitle(context, file);
+        Configuration.instance().getTitleMaker().makeTitle(context, file);
 
         String html = markdownProcessor.markdownToHtml(content);
         context.put("markdown_content", html);

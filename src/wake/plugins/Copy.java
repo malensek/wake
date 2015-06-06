@@ -34,7 +34,7 @@ public class Copy implements Plugin {
 
     @Override
     public List<WakeFile> produces(WakeFile file) {
-        WakeFile output = file.getOutputFile();
+        WakeFile output = file.toOutputFile();
         ArrayList<WakeFile> outputs = new ArrayList<>();
         outputs.add(output);
         return outputs;
@@ -42,7 +42,7 @@ public class Copy implements Plugin {
 
     @Override
     public void process(WakeFile file) throws Exception {
-        WakeFile output = file.getOutputFile();
+        WakeFile output = file.toOutputFile();
         output.mkParentDir();
         Files.copy(file.toPath(), output.toPath());
         System.out.println(this.name() + ": "

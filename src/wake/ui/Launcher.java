@@ -18,7 +18,8 @@ public class Launcher {
                 Runtime.getRuntime().availableProcessors(),
                 new WorkerThreadFactory(), null, false);
 
-        String sourceDir = Configuration.getSourceDir().getAbsolutePath();
+        Configuration config = Configuration.instance();
+        String sourceDir = config.getSourceDir().getAbsolutePath();
         List<Path> paths =
             Files.walk(Paths.get(sourceDir))
             .collect(Collectors.toList());

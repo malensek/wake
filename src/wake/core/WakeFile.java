@@ -51,11 +51,12 @@ public class WakeFile extends File {
         this.getParentFile().mkdirs();
     }
 
-    public WakeFile getOutputFile() {
+    public WakeFile toOutputFile() {
+        Configuration config = Configuration.instance();
         String absPath = getAbsolutePath();
         String outString = absPath.replace(
-                Configuration.getSourceDir().getAbsolutePath(),
-                Configuration.getOutputDir().getAbsolutePath());
+                config.getSourceDir().getAbsolutePath(),
+                config.getOutputDir().getAbsolutePath());
         return new WakeFile(outString);
     }
 }

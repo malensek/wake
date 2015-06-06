@@ -11,15 +11,21 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 
 public class Configuration {
 
-    private static File sourceDir;
-    private static File outputDir;
-    private static File templateDir;
+    private File sourceDir;
+    private File outputDir;
+    private File templateDir;
 
-    private static TitleMaker titleMaker;
+    private TitleMaker titleMaker;
 
-    static {
+    private static Configuration instance;
+
+    private Configuration() {
         String settingsData = "";
         File settingsFile = new File("Wakefile.yml");
+        if (settingsFile.exists() == false) {
+            return;
+        }
+
         try {
             settingsData = new String(
                     Files.readAllBytes(settingsFile.toPath()));
@@ -49,23 +55,30 @@ public class Configuration {
         }
     }
 
-    public static File getSourceDir() {
+    public static Configuration instance() {
+        if (Configuration.instance == null) {
+            instance = new Configuration();
+        }
+        return instance;
+    }
+
+    public File getSourceDir() {
         return sourceDir;
     }
 
-    public static File getOutputDir() {
+    public File getOutputDir() {
         return outputDir;
     }
 
-    public static File getTemplateDir() {
+    public File getTemplateDir() {
         return templateDir;
     }
 
-    public static TitleMaker getTitleMaker() {
+    public TitleMaker getTitleMaker() {
         return titleMaker;
     }
 
-    private static File readDirConfig(String defaultName, Map<?, ?> config) {
+    private File readDirConfig(String defaultName, Map<?, ?> config) {
         if (config == null) {
             return new File(defaultName);
         }
@@ -81,7 +94,7 @@ public class Configuration {
         return new File(defaultName);
     }
 
-    private static String readSetting(String settingName, Map<?, ?> config) {
+    private String readSetting(String settingName, Map<?, ?> config) {
         if (config == null) {
             return null;
         }
