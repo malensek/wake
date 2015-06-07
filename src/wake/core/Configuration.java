@@ -11,9 +11,9 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 
 public class Configuration {
 
-    private File sourceDir;
-    private File outputDir;
-    private File templateDir;
+    private File sourceDir = new File("source");
+    private File outputDir = new File("output");
+    private File templateDir = new File("templates");
 
     private TitleMaker titleMaker;
 
