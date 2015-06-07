@@ -19,6 +19,13 @@ import wake.core.Configuration;
 import wake.core.Plugin;
 import wake.core.WakeFile;
 
+/**
+ * Plugin to process Markdown (.md) files. This plugin takes a markdown file as
+ * its input, reads its YAML front matter, converts the Markdown to HTML, and
+ * then inserts the final markup into a Velocity template.
+ *
+ * @author malensek
+ */
 public class Markdown implements Plugin {
 
     /* Markdown files only have a single dependency other than themselves: the
