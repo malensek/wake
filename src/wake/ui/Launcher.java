@@ -1,5 +1,6 @@
 package wake.ui;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,9 +20,16 @@ public class Launcher {
                 new WorkerThreadFactory(), null, false);
 
         Configuration config = Configuration.instance();
-        String sourceDir = config.getSourceDir().getAbsolutePath();
+        File sourceDir = config.getSourceDir();
+
+        if (sourceDir.exists() == false) {
+            System.out.println("Could not locate source directory!");
+            System.exit(1);
+        }
+
+        String sourcePath = config.getSourceDir().getAbsolutePath();
         List<Path> paths =
-            Files.walk(Paths.get(sourceDir))
+            Files.walk(Paths.get(sourcePath))
             .collect(Collectors.toList());
 
         fjp.submit(() -> {
