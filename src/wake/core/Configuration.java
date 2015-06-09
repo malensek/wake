@@ -23,7 +23,10 @@ public class Configuration {
         String settingsData = "";
         File settingsFile = new File("Wakefile.yaml");
         if (settingsFile.exists() == false) {
-            return;
+            settingsFile = new File("Wakefile.yml");
+            if (settingsFile.exists() == false) {
+                return;
+            }
         }
 
         try {
