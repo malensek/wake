@@ -1,7 +1,11 @@
 package wake.plugins;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import wake.core.Plugin;
 import wake.core.WakeFile;
@@ -27,6 +31,13 @@ public class Gallery implements Plugin {
         if (galleryFile.exists()) {
             /* TODO: is this file an image? */
 
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(file);
+            } catch (IOException e) {
+                System.out.println("Gallery: '" + file.getRelativePath() + "' "
+                        + "is not an image or cannot be loaded.");
+            }
         }
 
         return false;
