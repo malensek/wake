@@ -12,6 +12,11 @@ import wake.core.WakeFile;
 
 public class Gallery implements Plugin {
 
+    static {
+        /* Disable the Mac OS X AWT dock icon: */
+        System.setProperty("apple.awt.UIElement", "true");
+    }
+
     private static final String galleryFileName = "gallery.yaml";
 
     @Override
