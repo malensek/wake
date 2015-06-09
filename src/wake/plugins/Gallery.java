@@ -12,7 +12,7 @@ import wake.core.WakeFile;
 
 public class Gallery implements Plugin {
 
-    private static final String galleryFileName = "gallery.json";
+    private static final String galleryFileName = "gallery.yaml";
 
     @Override
     public String name() {
