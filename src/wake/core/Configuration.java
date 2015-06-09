@@ -21,7 +21,7 @@ public class Configuration {
 
     private Configuration() {
         String settingsData = "";
-        File settingsFile = new File("Wakefile.yml");
+        File settingsFile = new File("Wakefile.yaml");
         if (settingsFile.exists() == false) {
             return;
         }
