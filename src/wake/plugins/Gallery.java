@@ -37,12 +37,15 @@ public class Gallery implements Plugin {
             /* TODO: is this file an image? */
 
             BufferedImage img = null;
+            int type;
             try {
                 img = ImageIO.read(file);
-            } catch (IOException e) {
+                type = img.getType();
+            } catch (Exception e) {
                 System.out.println("Gallery: '" + file.getRelativePath() + "' "
                         + "is not an image or cannot be loaded.");
             }
+
         }
 
         return false;
