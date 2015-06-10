@@ -1,8 +1,9 @@
 package wake.plugins;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -46,6 +47,7 @@ public class Gallery implements Plugin {
                         + "is not an image or cannot be loaded.");
             }
 
+            img.getGraphics();
         }
 
         return false;
@@ -53,16 +55,16 @@ public class Gallery implements Plugin {
 
     @Override
     public List<WakeFile> requires(WakeFile file) {
-        return null;
+        return new ArrayList<WakeFile>();
     }
 
     @Override
     public List<WakeFile> produces(WakeFile file) {
-        return null;
+        return new ArrayList<WakeFile>();
     }
 
     @Override
     public void process(WakeFile file) throws Exception {
-
+        System.out.println("Gallery!");
     }
 }
