@@ -2,11 +2,8 @@ package wake.ui;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 import wake.core.Configuration;
 import wake.exec.Task;
@@ -27,19 +24,15 @@ public class Launcher {
             System.exit(1);
         }
 
-        String sourcePath = config.getSourceDir().getAbsolutePath();
-        List<Path> paths =
-            Files.walk(Paths.get(sourcePath))
-            .collect(Collectors.toList());
-
+        String sourcePath = sourceDir.getAbsolutePath();
         fjp.submit(() -> {
             try {
-                paths.stream()
-                .parallel()
-                .filter(Files::isRegularFile)
-                .map(path -> new Task(path))
-                .filter(task -> task.needsExecution())
-                .forEach(task -> task.execute());
+                Files.walk(Paths.get(sourcePath))
+                    .parallel()
+                    .filter(Files::isRegularFile)
+                    .map(path -> new Task(path))
+                    .filter(task -> task.needsExecution())
+                    .forEach(task -> task.execute());
             } catch (Exception e) {
                 e.printStackTrace();
             }
