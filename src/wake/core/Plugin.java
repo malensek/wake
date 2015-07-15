@@ -27,6 +27,7 @@ public interface Plugin {
     /**
      * Processes the given file, producing the outputs specified by the
      * produces() method.
+     * @return List of files produced by the plugin
      */
-    public void process(WakeFile file) throws Exception;
+    public List<WakeFile> process(WakeFile file) throws Exception;
 }

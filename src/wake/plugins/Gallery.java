@@ -64,7 +64,11 @@ public class Gallery implements Plugin {
     }
 
     @Override
-    public void process(WakeFile file) throws Exception {
-        System.out.println("Gallery!");
+    public List<WakeFile> process(WakeFile file) throws Exception {
+        System.out.println("Gallery!: " + file.toString());
+
+        List<WakeFile> outputs = new ArrayList<>();
+        return outputs;
+    }
     }
 }

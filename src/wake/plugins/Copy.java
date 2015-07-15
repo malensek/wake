@@ -42,16 +42,15 @@ public class Copy implements Plugin {
     }
 
     @Override
-    public void process(WakeFile file) throws Exception {
+    public List<WakeFile> process(WakeFile file) throws Exception {
         WakeFile output = file.toOutputFile();
 
         output.mkParentDir();
         Files.copy(file.toPath(), output.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
 
-        System.out.println(this.name() + ": "
-                + file.getRelativePath() + " -> "
-                + output.getRelativePath());
+        List<WakeFile> outputs = new ArrayList<>();
+        outputs.add(output);
+        return outputs;
     }
-
 }

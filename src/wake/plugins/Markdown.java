@@ -83,7 +83,7 @@ public class Markdown implements Plugin {
     }
 
     @Override
-    public void process(WakeFile file) throws Exception {
+    public List<WakeFile> process(WakeFile file) throws Exception {
         String content = "";
         content = new String(Files.readAllBytes(file.toPath()));
 
@@ -111,8 +111,8 @@ public class Markdown implements Plugin {
         markdownTemplate.merge(context, writer);
         writer.close();
 
-        System.out.println(this.name() + ": "
-                + file.getRelativePath() + " -> "
-                + outputFile.getRelativePath());
+        List<WakeFile> outputs = new ArrayList<>();
+        outputs.add(outputFile);
+        return outputs;
     }
 }
