@@ -3,9 +3,11 @@ package wake.plugins;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 
 import wake.core.Plugin;
@@ -35,19 +37,23 @@ public class Gallery implements Plugin {
         File galleryFile = new File(
                 fileDir.getAbsolutePath() + "/" + galleryFileName);
         if (galleryFile.exists()) {
-            /* TODO: is this file an image? */
-
-            BufferedImage img = null;
-            int type;
+            String mimeType = null;
             try {
-                img = ImageIO.read(file);
-                type = img.getType();
+                mimeType = Files.probeContentType(file.toPath());
             } catch (Exception e) {
-                System.out.println("Gallery: '" + file.getRelativePath() + "' "
-                        + "is not an image or cannot be loaded.");
+                /* Exceptions are ignored here; the fallback method will be used
+                 * instead. */
             }
 
-            img.getGraphics();
+            /* Fallback method */
+            if (mimeType == null) {
+                mimeType = new MimetypesFileTypeMap().getContentType(file);
+            }
+
+            if (mimeType != null && mimeType.startsWith("image")) {
+                /* File is an image, we want to process it. */
+                return true;
+            }
         }
 
         return false;
