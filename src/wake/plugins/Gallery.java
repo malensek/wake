@@ -67,6 +67,23 @@ public class Gallery implements Plugin {
     private boolean isGalleryFile(File file) {
         return file.getName().equals(galleryFileName);
     }
+
+    /**
+     * Retrieves the gallery definition file (gallery.yaml) associated with the
+     * given file.
+     */
+    private WakeFile galleryFile(File file) {
+        File parent = file.getParentFile();
+        return new WakeFile(parent.getAbsolutePath() + "/" + galleryFileName);
+    }
+
+    /**
+     * Retrieves the location of the gallery HTML output file (the gallery
+     * index).
+     */
+    private WakeFile indexOutputFile(WakeFile file) {
+        WakeFile outputDir = file.getParentFile().toOutputFile();
+        return new WakeFile(outputDir.getAbsolutePath() + "/index.html");
     }
 
     private Dimension imageDimensions(File image) {
