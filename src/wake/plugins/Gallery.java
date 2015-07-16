@@ -78,6 +78,23 @@ public class Gallery implements Plugin {
     }
     }
 
+    private Dimension imageDimensions(File image) {
+        String mime = mimeType(image);
+        Iterator<ImageReader> it = ImageIO.getImageReadersByMIMEType(mime);
+        while (it.hasNext()) {
+            ImageReader reader = it.next();
+            try (ImageInputStream iis = new FileImageInputStream(image)) {
+                reader.setInput(iis);
+                int width = reader.getWidth(reader.getMinIndex());
+                int height = reader.getHeight(reader.getMinIndex());
+                return new Dimension(width, height);
+            } catch (IOException e) {
+                continue;
+            }
+        }
+        return null;
+    }
+
     private String mimeType(File file) {
         String mimeType = null;
         try {
