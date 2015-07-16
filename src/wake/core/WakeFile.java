@@ -47,6 +47,10 @@ public class WakeFile extends File {
         return rel;
     }
 
+    public WakeFile getParentFile() {
+        return new WakeFile(super.getParentFile().getAbsolutePath());
+    }
+
     public void mkParentDir() {
         this.getParentFile().mkdirs();
     }
