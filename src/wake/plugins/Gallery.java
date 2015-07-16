@@ -37,19 +37,7 @@ public class Gallery implements Plugin {
         File galleryFile = new File(
                 fileDir.getAbsolutePath() + "/" + galleryFileName);
         if (galleryFile.exists()) {
-            String mimeType = null;
-            try {
-                mimeType = Files.probeContentType(file.toPath());
-            } catch (Exception e) {
-                /* Exceptions are ignored here; the fallback method will be used
-                 * instead. */
-            }
-
-            /* Fallback method */
-            if (mimeType == null) {
-                mimeType = new MimetypesFileTypeMap().getContentType(file);
-            }
-
+            String mimeType = mimeType(file);
             if (mimeType != null && mimeType.startsWith("image")) {
                 /* File is an image, we want to process it. */
                 return true;
