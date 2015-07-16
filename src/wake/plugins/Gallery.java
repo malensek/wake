@@ -77,4 +77,21 @@ public class Gallery implements Plugin {
         return outputs;
     }
     }
+
+    private String mimeType(File file) {
+        String mimeType = null;
+        try {
+            mimeType = Files.probeContentType(file.toPath());
+        } catch (Exception e) {
+            /* Exceptions are ignored here; the fallback method will be used
+             * instead. */
+        }
+
+        /* Fallback method */
+        if (mimeType == null) {
+            mimeType = new MimetypesFileTypeMap().getContentType(file);
+        }
+
+        return mimeType;
+    }
 }
