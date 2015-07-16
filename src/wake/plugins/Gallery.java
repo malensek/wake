@@ -64,6 +64,9 @@ public class Gallery implements Plugin {
         List<WakeFile> outputs = new ArrayList<>();
         return outputs;
     }
+    private boolean isGalleryFile(File file) {
+        return file.getName().equals(galleryFileName);
+    }
     }
 
     private Dimension imageDimensions(File image) {
