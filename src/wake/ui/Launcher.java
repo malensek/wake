@@ -3,7 +3,9 @@ package wake.ui;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 import wake.core.Configuration;
 import wake.exec.Task;
@@ -25,12 +27,16 @@ public class Launcher {
         }
 
         String sourcePath = sourceDir.getAbsolutePath();
+        Set<Task> taskList = Files.walk(Paths.get(sourcePath))
+            .parallel()
+            .filter(Files::isRegularFile)
+            .map(path -> new Task(path))
+            .collect(Collectors.toSet());
+
         fjp.submit(() -> {
             try {
-                Files.walk(Paths.get(sourcePath))
-                    .parallel()
-                    .filter(Files::isRegularFile)
-                    .map(path -> new Task(path))
+                taskList
+                    .parallelStream()
                     .filter(task -> task.needsExecution())
                     .forEach(task -> task.execute());
             } catch (Exception e) {
