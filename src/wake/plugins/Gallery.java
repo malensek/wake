@@ -86,6 +86,11 @@ public class Gallery implements Plugin {
         return new WakeFile(outputDir.getAbsolutePath() + "/index.html");
     }
 
+    /**
+     * Determines the dimensions of an image without reading the entire file.
+     *
+     * @return Dimensions if found, otherwise null.
+     */
     private Dimension imageDimensions(File image) {
         String mime = mimeType(image);
         Iterator<ImageReader> it = ImageIO.getImageReadersByMIMEType(mime);
@@ -103,6 +108,9 @@ public class Gallery implements Plugin {
         return null;
     }
 
+    /**
+     * Retrieves the MIME type of the specified file.
+     */
     private String mimeType(File file) {
         String mimeType = null;
         try {
