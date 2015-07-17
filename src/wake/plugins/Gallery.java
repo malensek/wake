@@ -58,7 +58,7 @@ public class Gallery implements Plugin {
 
     @Override
     public boolean wants(WakeFile file) {
-        if (file.getName().equals(galleryFileName)) {
+        if (isGalleryFile(file)) {
             return true;
         }
 
