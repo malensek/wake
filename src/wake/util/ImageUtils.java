@@ -15,6 +15,10 @@ import javax.imageio.stream.ImageInputStream;
 
 public class ImageUtils {
 
+    private ImageUtils() {
+
+    }
+
     /**
      * Determines the dimensions of an image without reading the entire file.
      *
