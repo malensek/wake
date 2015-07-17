@@ -88,11 +88,49 @@ public class Gallery implements Plugin {
 
     @Override
     public List<WakeFile> process(WakeFile file) throws Exception {
-        System.out.println("Gallery!: " + file.toString());
-
         List<WakeFile> outputs = new ArrayList<>();
+
+        if (isGalleryFile(file)) {
+            /* Generate gallery html */
+            generateIndex(file);
+            outputs.add(indexOutputFile(file));
+        } else {
+            generateImages(file);
+        }
+
         return outputs;
     }
+
+    private void generateIndex(WakeFile file) {
+        File galleryDir = file.getParentFile();
+        for (File f : galleryDir.listFiles()) {
+            String mime = mimeType(f);
+            if (mime.startsWith("image") == false) {
+                continue;
+            }
+
+            GalleryImageDescriptor imgDesc = new GalleryImageDescriptor();
+            imgDesc.fileName = f.getName();
+            imgDesc.thumbnail = thumbnailOutputFile(file).getName();
+            imgDesc.dims = imageDimensions(f);
+            imgDesc.toHTML();
+            System.out.println(imgDesc.toHTML());
+        }
+    }
+
+    private void generateImages(WakeFile file) {
+        try {
+            BufferedImage img = ImageIO.read(file);
+            BufferedImage resizedImg = scaleImage(img, 1024, 1024);
+            BufferedImage thumbnailImg = scaleImage(img, 256, 256);
+            ImageIO.write(resizedImg, "JPG", file.toOutputFile());
+            ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
+
+        } catch (IOException e) {
+            return;
+        }
+    }
+
     private BufferedImage scaleImage(
             BufferedImage source, int width, int height) {
 
