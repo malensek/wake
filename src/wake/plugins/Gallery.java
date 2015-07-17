@@ -16,11 +16,6 @@ import wake.util.MIME;
 
 public class Gallery implements Plugin {
 
-    static {
-        /* Disable the Mac OS X AWT dock icon: */
-        System.setProperty("apple.awt.UIElement", "true");
-    }
-
     private static final String galleryFileName = "index.md";
 
     private static final String figureTag
