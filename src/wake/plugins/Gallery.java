@@ -78,12 +78,33 @@ public class Gallery implements Plugin {
 
     @Override
     public List<WakeFile> requires(WakeFile file) {
-        return new ArrayList<WakeFile>();
+        List<WakeFile> dependencies = new ArrayList<>();
+
+        if (isGalleryFile(file)) {
+            /* Add the gallery directory as a dependency so that file changes
+             * (such as an image being deleted) will be caught */
+            dependencies.add(file.getParentFile());
+        } else {
+            dependencies.add(galleryFile(file));
+        }
+
+        return dependencies;
     }
 
     @Override
     public List<WakeFile> produces(WakeFile file) {
-        return new ArrayList<WakeFile>();
+        List<WakeFile> outputs = new ArrayList<>();
+
+        if (isGalleryFile(file)) {
+            outputs.add(indexOutputFile(file));
+        } else {
+            WakeFile image = file.toOutputFile();
+            WakeFile thumb = thumbnailOutputFile(file);
+            outputs.add(image);
+            outputs.add(thumb);
+        }
+
+        return outputs;
     }
 
     @Override
