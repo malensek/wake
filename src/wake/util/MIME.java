@@ -12,6 +12,10 @@ import javax.activation.MimetypesFileTypeMap;
  */
 public class MIME {
 
+    private MIME() {
+
+    }
+
     /**
      * Retrieves the MIME type of the specified file.
      * @param file The File to retrieve the MIME type of.
