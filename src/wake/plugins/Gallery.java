@@ -30,6 +30,27 @@ public class Gallery implements Plugin {
 
     private static final String galleryFileName = "index.md";
 
+    private static final String figureTag
+        = "<figure itemprop=\"associatedMedia\" itemscope "
+        + "itemtype=\"http://schema.org/ImageObject\">";
+
+    private class GalleryImageDescriptor {
+        public String fileName;
+        public String thumbnail;
+        public Dimension dims;
+
+        public String toHTML() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(figureTag);
+            sb.append("<a href=\"" + fileName + "\" itemprop=\"contentUrl\" "
+                    + "data-size=\"" + dims.width + "x" + dims.height + "\">");
+            sb.append("<img src=\"" + thumbnail + "\" itemprop=\"thumbnail\" "
+                    + "alt=\"test\" width=\"200\" height=\"200\">");
+            sb.append("</a></figure>");
+            return sb.toString();
+        }
+    }
+
     @Override
     public String name() {
         return "Gallery";
