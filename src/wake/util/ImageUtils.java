@@ -15,11 +15,6 @@ import javax.imageio.stream.ImageInputStream;
 
 public class ImageUtils {
 
-    static {
-        /* Disable the Mac OS X AWT dock icon: */
-        System.setProperty("apple.awt.UIElement", "true");
-    }
-
     private ImageUtils() {
 
     }

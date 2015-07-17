@@ -12,6 +12,12 @@ import wake.exec.Task;
 import wake.exec.WorkerThreadFactory;
 
 public class Launcher {
+
+    static {
+        /* Disable the Mac OS X AWT dock icon: */
+        System.setProperty("apple.awt.UIElement", "true");
+    }
+
     public static void main(String[] args) throws Exception {
 
         ForkJoinPool fjp = new ForkJoinPool(
