@@ -140,6 +140,12 @@ public class Gallery implements Plugin {
         return new WakeFile(outputDir.getAbsolutePath() + "/index.html");
     }
 
+    private WakeFile thumbnailOutputFile(WakeFile file) {
+        WakeFile out = file.toOutputFile();
+        WakeFile thumb = new WakeFile(out.getAbsolutePath() + ".thumb.jpg");
+        return thumb;
+    }
+
     /**
      * Determines the dimensions of an image without reading the entire file.
      *
