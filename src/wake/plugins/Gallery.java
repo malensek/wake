@@ -28,7 +28,7 @@ public class Gallery implements Plugin {
         System.setProperty("apple.awt.UIElement", "true");
     }
 
-    private static final String galleryFileName = "gallery.yaml";
+    private static final String galleryFileName = "index.md";
 
     @Override
     public String name() {
