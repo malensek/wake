@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import wake.core.Plugin;
@@ -14,6 +15,9 @@ public class Task {
 
     private WakeFile taskFile;
     private Plugin plugin;
+
+    List<WakeFile> outputs = new ArrayList<>();
+    List<WakeFile> dependencies = new ArrayList<>();
 
     public Task(File file) {
         this.taskFile = new WakeFile(file.getAbsolutePath());
@@ -26,12 +30,11 @@ public class Task {
     public boolean needsExecution() {
         plugin = determinePlugin();
         if (plugin == null) {
-            //System.out.println("Could not determine plugin!");
             return false;
         }
 
-        List<WakeFile> outputs = plugin.produces(taskFile);
-        List<WakeFile> dependencies = plugin.requires(taskFile);
+        outputs = plugin.produces(taskFile);
+        dependencies = plugin.requires(taskFile);
 
         for (WakeFile dependency : dependencies) {
             if (dependency.exists() == false) {
@@ -48,16 +51,26 @@ public class Task {
                 || newestDepChange > oldestOutChange);
     }
 
-    public void execute() {
+    public List<WakeFile> outputs() {
+        return this.outputs;
+    }
+
+    public List<WakeFile> dependencies() {
+        return this.dependencies;
+    }
+
+    public List<WakeFile> execute() {
         if (plugin == null) {
             System.out.println("No plugin found for file: " + taskFile);
         }
 
+        List<WakeFile> out = null;
         try {
-            plugin.process(taskFile);
+            out = plugin.process(taskFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return out;
     }
 
     private long newestChange(List<WakeFile> files) {
@@ -103,6 +116,10 @@ public class Task {
     }
 
     private Plugin determinePlugin() {
+        if (plugin != null) {
+            return plugin;
+        }
+
         List<Plugin> plugins
             = ((WorkerThread) Thread.currentThread()).getPlugins();
 
