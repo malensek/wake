@@ -2,17 +2,14 @@ package wake.plugins;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
@@ -20,6 +17,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import wake.core.Plugin;
 import wake.core.WakeFile;
+import wake.util.MIME;
 
 public class Gallery implements Plugin {
 
@@ -66,7 +64,7 @@ public class Gallery implements Plugin {
         File galleryFile = new File(
                 fileDir.getAbsolutePath() + "/" + galleryFileName);
         if (galleryFile.exists()) {
-            String mimeType = mimeType(file);
+            String mimeType = MIME.getMIMEType(file);
             if (mimeType != null && mimeType.startsWith("image")) {
                 /* File is an image, we want to process it. */
                 return true;
@@ -125,7 +123,7 @@ public class Gallery implements Plugin {
     private void generateIndex(WakeFile file) {
         File galleryDir = file.getParentFile();
         for (File f : galleryDir.listFiles()) {
-            String mime = mimeType(f);
+            String mime = MIME.getMIMEType(f);
             if (mime.startsWith("image") == false) {
                 continue;
             }
@@ -232,7 +230,7 @@ public class Gallery implements Plugin {
      * @return Dimensions if found, otherwise null.
      */
     private Dimension imageDimensions(File image) {
-        String mime = mimeType(image);
+        String mime = MIME.getMIMEType(image);
         Iterator<ImageReader> it = ImageIO.getImageReadersByMIMEType(mime);
         while (it.hasNext()) {
             ImageReader reader = it.next();
