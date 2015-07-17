@@ -4,8 +4,12 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -13,6 +17,9 @@ import wake.core.Plugin;
 import wake.core.WakeFile;
 import wake.util.ImageUtils;
 import wake.util.MIME;
+import wake.util.SharedDataset;
+import wake.util.SharedDatasetAccessor;
+import wake.util.YAMLFrontMatter;
 
 public class Gallery implements Plugin {
 
@@ -36,6 +43,33 @@ public class Gallery implements Plugin {
                     + "alt=\"test\" width=\"200\" height=\"200\">");
             sb.append("</a></figure>");
             return sb.toString();
+        }
+    }
+
+    private class GalleryDatasetAccessor implements SharedDatasetAccessor {
+
+        private File galleryDir;
+
+        public GalleryDatasetAccessor(File galleryDir) {
+            this.galleryDir = galleryDir;
+        }
+
+        public Map<?, ?> createDataset() {
+            Path galleryPath = new File(galleryDir.getAbsolutePath()
+                    + "/" + galleryFileName).toPath();
+
+            String content;
+            try {
+                content = new String(Files.readAllBytes(galleryPath));
+            } catch (IOException e) {
+                return new HashMap<>();
+            }
+
+            return YAMLFrontMatter.readFrontMatter(content);
+        }
+
+        public String getDatasetID() {
+            return galleryDir.getAbsolutePath();
         }
     }
 
@@ -128,10 +162,22 @@ public class Gallery implements Plugin {
     }
 
     private void generateImages(WakeFile file) {
+        GalleryDatasetAccessor gda = new GalleryDatasetAccessor(
+                file.getParentFile());
+        Map<?, ?> galleryParams = SharedDataset.instance().getDataset(gda);
+
+        int maxSize = Integer.parseInt(
+                (String) galleryParams.get("imageSize"));
+        int thumbSize = Integer.parseInt(
+                (String) galleryParams.get("thumbSize"));
+        System.out.println("thumb size: " + thumbSize);
+
         try {
             BufferedImage img = ImageIO.read(file);
-            BufferedImage resizedImg = ImageUtils.scaleImage(img, 1024, 1024);
-            BufferedImage thumbnailImg = ImageUtils.scaleImage(img, 256, 256);
+            BufferedImage resizedImg = ImageUtils.scaleImage(
+                    img, maxSize, maxSize);
+            BufferedImage thumbnailImg = ImageUtils.scaleImage(
+                    img, thumbSize, thumbSize);
             ImageIO.write(resizedImg, "JPG", file.toOutputFile());
             ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
 
