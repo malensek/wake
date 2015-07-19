@@ -170,7 +170,6 @@ public class Gallery implements Plugin {
                 (String) galleryParams.get("imageSize"));
         int thumbSize = Integer.parseInt(
                 (String) galleryParams.get("thumbSize"));
-        System.out.println("thumb size: " + thumbSize);
 
         try {
             BufferedImage img = ImageIO.read(file);
