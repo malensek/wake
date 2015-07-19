@@ -144,7 +144,7 @@ public class Gallery implements Plugin {
         return outputs;
     }
 
-    private void generateIndex(WakeFile file) {
+    private List<WakeFile> generateIndex(WakeFile file) {
         File galleryDir = file.getParentFile();
         for (File f : galleryDir.listFiles()) {
             String mime = MIME.getMIMEType(f);
@@ -159,9 +159,11 @@ public class Gallery implements Plugin {
             imgDesc.toHTML();
             System.out.println(imgDesc.toHTML());
         }
+
+        return null;
     }
 
-    private void generateImages(WakeFile file) {
+    private List<WakeFile> generateImages(WakeFile file) {
         GalleryDatasetAccessor gda = new GalleryDatasetAccessor(
                 file.getParentFile());
         Map<?, ?> galleryParams = SharedDataset.instance().getDataset(gda);
@@ -171,18 +173,28 @@ public class Gallery implements Plugin {
         int thumbSize = Integer.parseInt(
                 (String) galleryParams.get("thumbSize"));
 
+        List<WakeFile> outputs = new ArrayList<>();
         try {
             BufferedImage img = ImageIO.read(file);
             BufferedImage resizedImg = ImageUtils.scaleImage(
                     img, maxSize, maxSize);
             BufferedImage thumbnailImg = ImageUtils.scaleImage(
                     img, thumbSize, thumbSize);
+
+            WakeFile imageFile = file.toOutputFile();
+            WakeFile thumbFile = thumbnailOutputFile(file);
+
             ImageIO.write(resizedImg, "JPG", file.toOutputFile());
             ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
 
+            outputs.add(imageFile);
+            outputs.add(thumbFile);
+
         } catch (IOException e) {
-            return;
+            return outputs;
         }
+
+        return outputs;
     }
 
     private boolean isGalleryFile(File file) {
