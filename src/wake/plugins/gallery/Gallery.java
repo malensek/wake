@@ -106,14 +106,13 @@ public class Gallery implements Plugin {
 
     @Override
     public List<WakeFile> process(WakeFile file) throws Exception {
-        List<WakeFile> outputs = new ArrayList<>();
+        List<WakeFile> outputs;
 
         if (isGalleryFile(file)) {
             /* Generate gallery html */
-            generateIndex(file);
-            outputs.add(indexOutputFile(file));
+            outputs = generateIndex(file);
         } else {
-            generateImages(file);
+            outputs = generateImages(file);
         }
 
         return outputs;
@@ -151,7 +150,7 @@ public class Gallery implements Plugin {
         WakeFile outputFile = produces(file).get(0);
         outputFile.mkParentDir();
         FileWriter writer = new FileWriter(outputFile);
-        markdownTemplate.merge(context, writer);
+        template.merge(context, writer);
         writer.close();
 
         List<WakeFile> outputs = new ArrayList<>();
