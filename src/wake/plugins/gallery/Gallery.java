@@ -26,7 +26,7 @@ import wake.util.YAMLFrontMatter;
 
 public class Gallery implements Plugin {
 
-    protected static final String galleryFileName = "index.md";
+    protected static final String galleryFileName = "gallery_index.md";
 
     private VelocityEngine velocityEngine;
     private PegDownProcessor markdownProcessor;
