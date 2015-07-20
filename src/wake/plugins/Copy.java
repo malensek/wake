@@ -45,7 +45,6 @@ public class Copy implements Plugin {
     public List<WakeFile> process(WakeFile file) throws Exception {
         WakeFile output = file.toOutputFile();
 
-        output.mkParentDir();
         Files.copy(file.toPath(), output.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
 

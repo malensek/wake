@@ -64,6 +64,12 @@ public class Task {
             System.out.println("No plugin found for file: " + taskFile);
         }
 
+        /* Create directories for the output files */
+        List<WakeFile> expectedOutputs = outputs();
+        for (WakeFile file : expectedOutputs) {
+            file.mkParentDir();
+        }
+
         List<WakeFile> out = null;
         try {
             out = plugin.process(taskFile);

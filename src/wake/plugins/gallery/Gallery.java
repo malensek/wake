@@ -148,7 +148,6 @@ public class Gallery implements Plugin {
         context.put("thumbnail_content", thumbnailHtml.toString());
 
         WakeFile outputFile = produces(file).get(0);
-        outputFile.mkParentDir();
         FileWriter writer = new FileWriter(outputFile);
         template.merge(context, writer);
         writer.close();
@@ -178,7 +177,6 @@ public class Gallery implements Plugin {
             WakeFile imageFile = file.toOutputFile();
             WakeFile thumbFile = thumbnailOutputFile(file);
 
-            imageFile.mkParentDir();
             ImageIO.write(resizedImg, "JPG", imageFile);
             ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
 
