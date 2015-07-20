@@ -3,7 +3,6 @@ package wake.plugins;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +12,10 @@ import org.apache.velocity.app.VelocityEngine;
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 
-import com.esotericsoftware.yamlbeans.YamlReader;
-
 import wake.core.Configuration;
 import wake.core.Plugin;
 import wake.core.WakeFile;
+import wake.util.YAMLFrontMatter;
 
 /**
  * Plugin to process Markdown (.md) files. This plugin takes a markdown file as
@@ -51,7 +49,7 @@ public class Markdown implements Plugin {
         velocityEngine.init();
         markdownTemplate = velocityEngine.getTemplate(
                 template.getName());
- 
+
         markdownProcessor = new PegDownProcessor(Extensions.ALL);
     }
 
@@ -86,17 +84,8 @@ public class Markdown implements Plugin {
     public List<WakeFile> process(WakeFile file) throws Exception {
         String content = "";
         content = new String(Files.readAllBytes(file.toPath()));
-
-        Map<?, ?> yamlData = new HashMap<>();
-
-        if (content.startsWith("---")) {
-            /* Read YAML front matter */
-            YamlReader yaml = new YamlReader(content);
-            yamlData = (Map<?, ?>) yaml.read();
-
-            /* Trim past the 2nd YAML delimiter */
-            content = content.substring(content.indexOf("---", 3) + 3);
-        }
+        Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(content);
+        content = YAMLFrontMatter.removeFrontMatter(content);
 
         VelocityContext context = new VelocityContext(yamlData);
 
