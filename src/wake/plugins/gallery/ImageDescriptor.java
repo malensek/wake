@@ -16,11 +16,15 @@ class ImageDescriptor {
     public String toHTML() {
         StringBuilder sb = new StringBuilder();
         sb.append(figureTag);
+        sb.append(System.lineSeparator());
         sb.append("<a href=\"" + fileName + "\" itemprop=\"contentUrl\" "
                 + "data-size=\"" + dims.width + "x" + dims.height + "\">");
         sb.append("<img src=\"" + thumbnail + "\" itemprop=\"thumbnail\" "
                 + "alt=\"" + description + "\">");
-        sb.append("</a></figure>");
+        sb.append("</a>");
+        sb.append(System.lineSeparator());
+        sb.append("</figure>");
+        sb.append(System.lineSeparator());
         return sb.toString();
     }
 }
