@@ -27,22 +27,22 @@ import wake.util.YAMLFrontMatter;
 public class Gallery implements Plugin {
 
     protected static final String galleryFileName = "gallery_index.md";
+    protected static final String galleryTemplate = "gallery.vm";
 
     private VelocityEngine velocityEngine;
     private PegDownProcessor markdownProcessor;
-    private Template markdownTemplate;
+    private WakeFile templateFile;
+    private Template template;
 
     public Gallery() {
         Configuration config = Configuration.instance();
 
-        WakeFile template = new WakeFile(
-                config.getTemplateDir(), "gallery.vm");
+        templateFile = new WakeFile(config.getTemplateDir(), galleryTemplate);
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("file.resource.loader.path",
                 config.getTemplateDir().getAbsolutePath());
         velocityEngine.init();
-        markdownTemplate = velocityEngine.getTemplate(
-                template.getName());
+        template = velocityEngine.getTemplate(templateFile.getName());
 
         markdownProcessor = new PegDownProcessor(Extensions.ALL);
     }
@@ -80,6 +80,7 @@ public class Gallery implements Plugin {
             /* Add the gallery directory as a dependency so that file changes
              * (such as an image being deleted) will be caught */
             dependencies.add(file.getParentFile());
+            dependencies.add(this.templateFile);
         } else {
             dependencies.add(galleryFile(file));
         }
