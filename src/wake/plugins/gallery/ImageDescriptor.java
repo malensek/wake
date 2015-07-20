@@ -6,7 +6,7 @@ class ImageDescriptor {
 
     private static final String figureTag
         = "<figure itemprop=\"associatedMedia\" itemscope "
-        + "itemtype=\"http://schema.org/ImageObject\">";
+        + "itemtype=\"http://schema.org/ImageObject\" class=\"galleryFigure\">";
 
     public String fileName;
     public String thumbnail;
