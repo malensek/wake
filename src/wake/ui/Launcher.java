@@ -33,11 +33,13 @@ public class Launcher {
         }
 
         String sourcePath = sourceDir.getAbsolutePath();
-        Set<Task> taskList = Files.walk(Paths.get(sourcePath))
-            .parallel()
-            .filter(Files::isRegularFile)
-            .map(path -> new Task(path))
-            .collect(Collectors.toSet());
+        Set<Task> taskList = fjp.submit(() -> {
+            return Files.walk(Paths.get(sourcePath))
+                .parallel()
+                .filter(Files::isRegularFile)
+                .map(path -> new Task(path))
+                .collect(Collectors.toSet());
+        }).get();
 
         fjp.submit(() -> {
             try {
