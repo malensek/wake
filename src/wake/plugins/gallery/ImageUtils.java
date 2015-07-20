@@ -1,4 +1,4 @@
-package wake.util;
+package wake.plugins.gallery;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
+
+import wake.util.MIME;
 
 public class ImageUtils {
 
