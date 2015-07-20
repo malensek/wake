@@ -178,7 +178,8 @@ public class Gallery implements Plugin {
             WakeFile imageFile = file.toOutputFile();
             WakeFile thumbFile = thumbnailOutputFile(file);
 
-            ImageIO.write(resizedImg, "JPG", file.toOutputFile());
+            imageFile.mkParentDir();
+            ImageIO.write(resizedImg, "JPG", imageFile);
             ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
 
             outputs.add(imageFile);
