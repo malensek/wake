@@ -1,76 +1,50 @@
-package wake.plugins;
+package wake.plugins.gallery;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.pegdown.Extensions;
+import org.pegdown.PegDownProcessor;
+
+import wake.core.Configuration;
 import wake.core.Plugin;
 import wake.core.WakeFile;
-import wake.util.ImageUtils;
 import wake.util.MIME;
 import wake.util.SharedDataset;
-import wake.util.SharedDatasetAccessor;
 import wake.util.YAMLFrontMatter;
 
 public class Gallery implements Plugin {
 
-    private static final String galleryFileName = "index.md";
+    protected static final String galleryFileName = "index.md";
 
-    private static final String figureTag
-        = "<figure itemprop=\"associatedMedia\" itemscope "
-        + "itemtype=\"http://schema.org/ImageObject\">";
+    private VelocityEngine velocityEngine;
+    private PegDownProcessor markdownProcessor;
+    private Template markdownTemplate;
 
-    private class GalleryImageDescriptor {
-        public String fileName;
-        public String thumbnail;
-        public Dimension dims;
+    public Gallery() {
+        Configuration config = Configuration.instance();
 
-        public String toHTML() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(figureTag);
-            sb.append("<a href=\"" + fileName + "\" itemprop=\"contentUrl\" "
-                    + "data-size=\"" + dims.width + "x" + dims.height + "\">");
-            sb.append("<img src=\"" + thumbnail + "\" itemprop=\"thumbnail\" "
-                    + "alt=\"test\" width=\"200\" height=\"200\">");
-            sb.append("</a></figure>");
-            return sb.toString();
-        }
-    }
+        WakeFile template = new WakeFile(
+                config.getTemplateDir(), "gallery.vm");
+        velocityEngine = new VelocityEngine();
+        velocityEngine.setProperty("file.resource.loader.path",
+                config.getTemplateDir().getAbsolutePath());
+        velocityEngine.init();
+        markdownTemplate = velocityEngine.getTemplate(
+                template.getName());
 
-    private class GalleryDatasetAccessor implements SharedDatasetAccessor {
-
-        private File galleryDir;
-
-        public GalleryDatasetAccessor(File galleryDir) {
-            this.galleryDir = galleryDir;
-        }
-
-        public Map<?, ?> createDataset() {
-            Path galleryPath = new File(galleryDir.getAbsolutePath()
-                    + "/" + galleryFileName).toPath();
-
-            String content;
-            try {
-                content = new String(Files.readAllBytes(galleryPath));
-            } catch (IOException e) {
-                return new HashMap<>();
-            }
-
-            return YAMLFrontMatter.readFrontMatter(content);
-        }
-
-        public String getDatasetID() {
-            return galleryDir.getAbsolutePath();
-        }
+        markdownProcessor = new PegDownProcessor(Extensions.ALL);
     }
 
     @Override
@@ -144,28 +118,48 @@ public class Gallery implements Plugin {
         return outputs;
     }
 
-    private List<WakeFile> generateIndex(WakeFile file) {
+    private List<WakeFile> generateIndex(WakeFile file) throws IOException {
         File galleryDir = file.getParentFile();
-        for (File f : galleryDir.listFiles()) {
-            String mime = MIME.getMIMEType(f);
+        StringBuilder thumbnailHtml = new StringBuilder();
+        for (File image : galleryDir.listFiles()) {
+            String mime = MIME.getMIMEType(image);
             if (mime.startsWith("image") == false) {
                 continue;
             }
+            WakeFile imageFile = new WakeFile(image.getAbsolutePath());
 
-            GalleryImageDescriptor imgDesc = new GalleryImageDescriptor();
-            imgDesc.fileName = f.getName();
-            imgDesc.thumbnail = thumbnailOutputFile(file).getName();
-            imgDesc.dims = ImageUtils.imageDimensions(f);
-            imgDesc.toHTML();
-            System.out.println(imgDesc.toHTML());
+            ImageDescriptor imgDesc = new ImageDescriptor();
+            imgDesc.fileName = imageFile.getName();
+            imgDesc.thumbnail = thumbnailOutputFile(imageFile).getName();
+            imgDesc.dims = ImageUtils.imageDimensions(imageFile);
+            thumbnailHtml.append(imgDesc.toHTML());
         }
 
-        return null;
+        String content = "";
+        content = new String(Files.readAllBytes(file.toPath()));
+        Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(content);
+        content = YAMLFrontMatter.removeFrontMatter(content);
+
+        VelocityContext context = new VelocityContext(yamlData);
+        Configuration.instance().getTitleMaker().makeTitle(context, file);
+
+        String html = markdownProcessor.markdownToHtml(content);
+        context.put("markdown_content", html);
+        context.put("thumbnail_content", thumbnailHtml.toString());
+
+        WakeFile outputFile = produces(file).get(0);
+        outputFile.mkParentDir();
+        FileWriter writer = new FileWriter(outputFile);
+        markdownTemplate.merge(context, writer);
+        writer.close();
+
+        List<WakeFile> outputs = new ArrayList<>();
+        outputs.add(outputFile);
+        return outputs;
     }
 
     private List<WakeFile> generateImages(WakeFile file) {
-        GalleryDatasetAccessor gda = new GalleryDatasetAccessor(
-                file.getParentFile());
+        DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
         Map<?, ?> galleryParams = SharedDataset.instance().getDataset(gda);
 
         int maxSize = Integer.parseInt(
@@ -224,5 +218,4 @@ public class Gallery implements Plugin {
         WakeFile thumb = new WakeFile(out.getAbsolutePath() + ".thumb.jpg");
         return thumb;
     }
-
 }
