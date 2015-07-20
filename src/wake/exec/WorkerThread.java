@@ -2,8 +2,8 @@ package wake.exec;
 
 import wake.core.Plugin;
 import wake.plugins.Copy;
-import wake.plugins.Gallery;
 import wake.plugins.Markdown;
+import wake.plugins.gallery.Gallery;
 
 import java.util.ArrayList;
 import java.util.List;
