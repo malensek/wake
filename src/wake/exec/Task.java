@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import wake.core.Plugin;
@@ -14,37 +14,41 @@ import wake.core.WakeFile;
 public class Task {
 
     private WakeFile taskFile;
-    private Plugin plugin;
+    private String pluginName;
 
-    List<WakeFile> outputs = new ArrayList<>();
-    List<WakeFile> dependencies = new ArrayList<>();
+    List<WakeFile> outputs = null;
+    List<WakeFile> dependencies = null;
 
     public Task(File file) {
         this.taskFile = new WakeFile(file.getAbsolutePath());
+        this.pluginName = determinePlugin();
     }
 
     public Task(Path path) {
         this.taskFile = new WakeFile(path);
+        this.pluginName = determinePlugin();
     }
 
-    public boolean needsExecution() {
-        plugin = determinePlugin();
-        if (plugin == null) {
-            return false;
-        }
+    private String determinePlugin() {
+        Collection<Plugin> plugins
+            = ((WorkerThread) Thread.currentThread()).getPlugins();
 
-        outputs = plugin.produces(taskFile);
-        dependencies = plugin.requires(taskFile);
-
-        for (WakeFile dependency : dependencies) {
-            if (dependency.exists() == false) {
-                /* TODO Warn the user that a dep wasn't fulfilled */
-                return false;
+        for (Plugin plugin : plugins) {
+            if (plugin.wants(taskFile)) {
+                return plugin.name();
             }
         }
 
-        long oldestOutChange = oldestChange(outputs);
-        long newestDepChange = newestChange(dependencies);
+        return null;
+    }
+
+    private Plugin pluginInstance() {
+        return ((WorkerThread) Thread.currentThread()).getPlugin(pluginName);
+    }
+
+    public boolean needsExecution() {
+        long oldestOutChange = oldestChange(outputs());
+        long newestDepChange = newestChange(dependencies());
         long sourceChange = changeTime(taskFile);
 
         return (sourceChange > oldestOutChange
@@ -52,17 +56,25 @@ public class Task {
     }
 
     public List<WakeFile> outputs() {
+        if (this.outputs == null) {
+            Plugin plugin = pluginInstance();
+            outputs = plugin.produces(taskFile);
+        }
+
         return this.outputs;
     }
 
     public List<WakeFile> dependencies() {
+        if (this.dependencies == null) {
+            Plugin plugin = pluginInstance();
+            dependencies = plugin.requires(taskFile);
+        }
+
         return this.dependencies;
     }
 
     public List<WakeFile> execute() {
-        if (plugin == null) {
-            System.out.println("No plugin found for file: " + taskFile);
-        }
+        Plugin plugin = pluginInstance();
 
         /* Create directories for the output files */
         List<WakeFile> expectedOutputs = outputs();
@@ -119,21 +131,5 @@ public class Task {
         }
 
         return ft.toMillis();
-    }
-
-    private Plugin determinePlugin() {
-        if (plugin != null) {
-            return plugin;
-        }
-
-        List<Plugin> plugins
-            = ((WorkerThread) Thread.currentThread()).getPlugins();
-
-        for (Plugin plugin : plugins) {
-            if (plugin.wants(taskFile)) {
-                return plugin;
-            }
-        }
-        return null;
     }
 }
