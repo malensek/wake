@@ -5,24 +5,32 @@ import wake.plugins.Copy;
 import wake.plugins.Markdown;
 import wake.plugins.gallery.Gallery;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 
 public class WorkerThread extends ForkJoinWorkerThread {
 
-    private List<Plugin> plugins;
+    private Map<String, Plugin> plugins = new LinkedHashMap<>();
 
     public WorkerThread(ForkJoinPool pool) {
         super(pool);
-        plugins = new ArrayList<>();
-        plugins.add(new Gallery());
-        plugins.add(new Markdown());
-        plugins.add(new Copy());
+        registerPlugin(new Gallery());
+        registerPlugin(new Markdown());
+        registerPlugin(new Copy());
     }
 
-    public List<Plugin> getPlugins() {
-        return this.plugins;
+    private void registerPlugin(Plugin plugin) {
+        plugins.put(plugin.name(), plugin);
+    }
+
+    public Collection<Plugin> getPlugins() {
+        return this.plugins.values();
+    }
+
+    public Plugin getPlugin(String name) {
+        return this.plugins.get(name);
     }
 }
