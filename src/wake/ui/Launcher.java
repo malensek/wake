@@ -46,7 +46,8 @@ public class Launcher {
                 taskList
                     .parallelStream()
                     .filter(task -> task.needsExecution())
-                    .forEach(task -> task.execute());
+                    .map(task -> task.execute())
+                    .forEach(System.out::println);
             } catch (Exception e) {
                 e.printStackTrace();
             }
