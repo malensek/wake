@@ -1,9 +1,7 @@
 package wake.exec;
 
 import wake.core.Plugin;
-import wake.plugins.Copy;
-import wake.plugins.Markdown;
-import wake.plugins.gallery.Gallery;
+import wake.plugins.Plugins;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -17,9 +15,13 @@ public class WorkerThread extends ForkJoinWorkerThread {
 
     public WorkerThread(ForkJoinPool pool) {
         super(pool);
-        registerPlugin(new Gallery());
-        registerPlugin(new Markdown());
-        registerPlugin(new Copy());
+        for (Class<? extends Plugin> p : Plugins.pluginList) {
+            try {
+                registerPlugin(p.newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void registerPlugin(Plugin plugin) {
