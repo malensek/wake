@@ -73,7 +73,7 @@ public class Task {
         return this.dependencies;
     }
 
-    public List<WakeFile> execute() {
+    public ExecutionResult execute() {
         Plugin plugin = pluginInstance();
 
         /* Create directories for the output files */
@@ -88,7 +88,8 @@ public class Task {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return out;
+
+        return new ExecutionResult(pluginName, out);
     }
 
     private long newestChange(List<WakeFile> files) {
