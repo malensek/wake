@@ -1,0 +1,60 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.pegdown', name: 'pegdown', version: '1.6.0'
+    compile group: 'org.apache.velocity', name: 'velocity', version: '1.7'
+    compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans',
+        version: '1.09'
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}
+
+Map<String, String> jarAttributes = [
+        'Implementation-Title': project.name,
+        'Implementation-Vendor': project.vendor,
+        'Implementation-Version': project.version,
+        'Built-By': System.getProperty('user.name'),
+        'Build-Jdk': System.getProperty('java.version'),
+        'Main-Class': project.mainClass
+]
+
+jar {
+    manifest {
+        attributes(jarAttributes)
+    }
+
+    // Create a 'fat' jar
+    from configurations.compile.collect {
+        it.isDirectory() ? it : zipTree(it)
+    }
+}
+
+task binJar(dependsOn: jar) {
+    description("Creates a runnable 'binary' jar file")
+    inputs.files(
+        "${projectDir}/etc/bootstrap.sh",
+        files(jar).getSingleFile())
+    def binFile = new File("${buildDir}/${project.name}")
+    outputs.files(binFile)
+    outputs.dir(projectDir)
+
+    doLast {
+        binFile.write("")
+
+        inputs.files.each {
+            if (it.exists()) {
+                binFile.append(it.getBytes());
+            }
+        }
+
+        binFile.setExecutable(true, true)
+    }
+}
