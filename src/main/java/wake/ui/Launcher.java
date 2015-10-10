@@ -2,9 +2,9 @@ package wake.ui;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +68,7 @@ public class Launcher {
 
         Set<WakeFile> existingOutputs =
             Files.walk(outputDir.toPath())
+            .filter(Files::isRegularFile)
             .map(file -> new WakeFile(file))
             .collect(Collectors.toSet());
 
@@ -82,20 +83,16 @@ public class Launcher {
         }
 
         System.out.println("Setting permissions...");
-        Files.walk(outputDir.toPath()).;
-        existingOutputs.retainAll(generatedOutputs);
+        List<Path> finalOutputs = 
+            Files.walk(outputDir.toPath()).collect(Collectors.toList());
         Set<PosixFilePermission> filePerms = config.getFilePermissions();
         Set<PosixFilePermission> dirPerms = config.getDirPermissions();
-        for (WakeFile file : existingOutputs) {
-            if (file.isFile() && filePerms != null) {
-                System.out.print('f');
-                Files.setPosixFilePermissions(file.toPath(), filePerms);
-            } else if (file.isDirectory() && dirPerms != null) {
-                System.out.print('d');
-                Files.setPosixFilePermissions(file.toPath(), dirPerms);
+        for (Path p : finalOutputs) {
+            if (p.toFile().isDirectory() && dirPerms != null) {
+                Files.setPosixFilePermissions(p, dirPerms);
+            } else if (p.toFile().isFile() && filePerms != null) {
+                Files.setPosixFilePermissions(p, filePerms);
             }
         }
-
-
     }
 }
