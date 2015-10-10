@@ -21,11 +21,15 @@ public class ExecutionResult {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(pluginName + "\t\t" + files.get(0).getRelativePath());
+        for (int i = 0; i < files.size(); ++i) {
+            sb.append(String.format(
+                        "%-15s%s",
+                        pluginName,
+                        files.get(i).getRelativePath()));
 
-        for (int i = 1; i < files.size(); ++i) {
-            sb.append(System.lineSeparator());
-            sb.append("\t\t" + files.get(i).getRelativePath());
+            if (i + 1 != files.size()) {
+                sb.append(System.lineSeparator());
+            }
         }
 
         return sb.toString();

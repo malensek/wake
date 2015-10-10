@@ -3,8 +3,11 @@ package wake.core;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
@@ -16,6 +19,9 @@ public class Configuration {
     private File templateDir = new File("templates");
 
     private TitleMaker titleMaker;
+
+    private Set<PosixFilePermission> filePerm = null;
+    private Set<PosixFilePermission> dirPerm = null;
 
     private static Configuration instance;
 
@@ -56,6 +62,15 @@ public class Configuration {
         } else {
             titleMaker = new BasicTitle();
         }
+
+        String filePermStr = readPermission("file", yamlData);
+        if (filePermStr != null) {
+            filePerm = PosixFilePermissions.fromString(filePermStr);
+        }
+        String dirPermStr = readPermission("dir", yamlData);
+        if (dirPermStr != null) {
+            dirPerm = PosixFilePermissions.fromString(dirPermStr);
+        }
     }
 
     public static Configuration instance() {
@@ -81,6 +96,14 @@ public class Configuration {
         return titleMaker;
     }
 
+    public Set<PosixFilePermission> getFilePermissions() {
+        return filePerm;
+    }
+
+    public Set<PosixFilePermission> getDirPermissions() {
+        return dirPerm;
+    }
+
     private File readDirConfig(String defaultName, Map<?, ?> config) {
         if (config == null) {
             return new File(defaultName);
@@ -103,5 +126,14 @@ public class Configuration {
         }
         Map<?, ?> settings = (Map<?, ?>) config.get("settings");
         return (String) settings.get(settingName);
+    }
+
+    private String readPermission(String permType, Map<?, ?> config) {
+        if (config == null) {
+            return null;
+        }
+
+        Map<?, ?> permissions = (Map<?, ?>) config.get("permissions");
+        return (String) permissions.get(permType);
     }
 }
