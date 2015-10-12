@@ -14,6 +14,10 @@ public class ExecutionResult {
         this.files = files;
     }
 
+    public List<WakeFile> files() {
+        return this.files;
+    }
+
     @Override
     public String toString() {
         if (files.isEmpty()) {
