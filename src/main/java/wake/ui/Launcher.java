@@ -1,6 +1,7 @@
 package wake.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,30 +62,47 @@ public class Launcher {
             }
         }).get();
 
+        System.out.println("Cleaning up orphaned files...");
+        ExecutionResult er = cleanOrphans(taskList, outputDir.toPath());
+        if (er.files().size() > 0) {
+            System.out.println(er);
+        }
+
+        System.out.println("Setting permissions...");
+        setPermissions(outputDir.toPath());
+    }
+
+    private static ExecutionResult cleanOrphans(
+            Set<Task> taskList, Path outputDir)
+    throws IOException {
         Set<WakeFile> generatedOutputs = taskList
             .parallelStream()
             .flatMap(task -> task.outputs().stream())
             .collect(Collectors.toSet());
 
         Set<WakeFile> existingOutputs =
-            Files.walk(outputDir.toPath())
+            Files.walk(outputDir)
             .filter(Files::isRegularFile)
             .map(file -> new WakeFile(file))
             .collect(Collectors.toSet());
 
-        System.out.println("Cleaning up orphaned files...");
         Set<WakeFile> orphans = new HashSet<>(existingOutputs);
         orphans.removeAll(generatedOutputs);
-        ExecutionResult er = new ExecutionResult(
-                "Remove", new ArrayList<WakeFile>(orphans));
-        System.out.println(er);
+
         for (WakeFile orphan : orphans) {
             orphan.delete();
         }
 
-        System.out.println("Setting permissions...");
+        ExecutionResult er = new ExecutionResult(
+                "Remove", new ArrayList<WakeFile>(orphans));
+        return er;
+    }
+
+    private static void setPermissions(Path outputDir)
+    throws IOException {
+        Configuration config = Configuration.instance();
         List<Path> finalOutputs = 
-            Files.walk(outputDir.toPath()).collect(Collectors.toList());
+            Files.walk(outputDir).collect(Collectors.toList());
         Set<PosixFilePermission> filePerms = config.getFilePermissions();
         Set<PosixFilePermission> dirPerms = config.getDirPermissions();
         for (Path p : finalOutputs) {
