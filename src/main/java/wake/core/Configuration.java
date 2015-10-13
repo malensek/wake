@@ -134,6 +134,10 @@ public class Configuration {
         }
 
         Map<?, ?> permissions = (Map<?, ?>) config.get("permissions");
-        return (String) permissions.get(permType);
+        if (permissions != null) {
+            return (String) permissions.get(permType);
+        } else {
+            return null;
+        }
     }
 }
