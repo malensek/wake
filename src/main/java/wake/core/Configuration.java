@@ -125,7 +125,11 @@ public class Configuration {
             return null;
         }
         Map<?, ?> settings = (Map<?, ?>) config.get("settings");
-        return (String) settings.get(settingName);
+        if (settings != null) {
+            return (String) settings.get(settingName);
+        } else {
+            return null;
+        }
     }
 
     private String readPermission(String permType, Map<?, ?> config) {
