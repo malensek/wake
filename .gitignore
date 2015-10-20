@@ -1,12 +1,11 @@
 # Eclipse files
-/bin
 /.classpath
 /.project
 /.settings
 
 # Local dev files
-/build
-/.gradle
+/bin
+/target
 
-# Mac OS File Attributes
+# OS-specific metadata/files
 .DS_Store
