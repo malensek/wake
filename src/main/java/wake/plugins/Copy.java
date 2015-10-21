@@ -1,6 +1,7 @@
 package wake.plugins;
 
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,8 @@ public class Copy implements Plugin {
         WakeFile output = file.toOutputFile();
 
         Files.copy(file.toPath(), output.toPath(),
-                StandardCopyOption.REPLACE_EXISTING);
+                StandardCopyOption.REPLACE_EXISTING,
+                LinkOption.NOFOLLOW_LINKS);
 
         List<WakeFile> outputs = new ArrayList<>();
         outputs.add(output);
