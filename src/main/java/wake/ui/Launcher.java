@@ -82,7 +82,7 @@ public class Launcher {
 
         Set<WakeFile> existingOutputs =
             Files.walk(outputDir)
-            .filter(Files::isRegularFile)
+            .filter(path -> Files.isDirectory(path) != true)
             .map(file -> new WakeFile(file))
             .collect(Collectors.toSet());
 
