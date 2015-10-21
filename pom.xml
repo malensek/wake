@@ -52,7 +52,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <minimizeJar>true</minimizeJar>
                     <dependencyReducedPomLocation>
                         ${project.build.directory}/dependency-reduced-pom.xml
                     </dependencyReducedPomLocation>
