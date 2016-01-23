@@ -133,4 +133,9 @@ public class Task {
 
         return ft.toMillis();
     }
+
+    @Override
+    public String toString() {
+        return taskFile.getName() + " [" + pluginName + "]";
+    }
 }
