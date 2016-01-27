@@ -3,6 +3,7 @@ package wake.exec;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Collection;
@@ -124,9 +125,16 @@ public class Task {
 
     private long changeTime(WakeFile file) {
         FileTime ft;
+        LinkOption options[] = new LinkOption[0];
 
         try {
-            ft = (FileTime) Files.getAttribute(file.toPath(), "unix:ctime");
+            Path path = file.toPath();
+
+            if (Files.isSymbolicLink(path)) {
+                options = new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+            }
+
+            ft = (FileTime) Files.getAttribute(path, "unix:ctime", options);
         } catch (IOException e) {
             return -1;
         }
