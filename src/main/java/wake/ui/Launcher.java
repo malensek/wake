@@ -2,6 +2,7 @@ package wake.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -101,8 +102,10 @@ public class Launcher {
     private static void setPermissions(Path outputDir)
     throws IOException {
         Configuration config = Configuration.instance();
-        List<Path> finalOutputs = 
-            Files.walk(outputDir).collect(Collectors.toList());
+        List<Path> finalOutputs =
+            Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
+            .collect(Collectors.toList());
+
         Set<PosixFilePermission> filePerms = config.getFilePermissions();
         Set<PosixFilePermission> dirPerms = config.getDirPermissions();
         for (Path p : finalOutputs) {
