@@ -50,6 +50,9 @@ public class HookServer {
         server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/hook", new HookHandler(server));
         server.setExecutor(null);
+    }
+
+    public void start() {
         server.start();
     }
 
@@ -63,7 +66,7 @@ public class HookServer {
 
         public void handle(HttpExchange t) throws IOException {
             InputStreamReader isr = new InputStreamReader(
-                    t.getRequestBody(),"utf-8");
+                    t.getRequestBody(), "utf-8");
             BufferedReader br = new BufferedReader(isr);
 
             int read;
