@@ -39,6 +39,7 @@ import com.sun.net.httpserver.Headers;
 
 public class HookServer {
 
+    private static int DEFAULT_PORT = 7000;
     private HttpServer server;
 
     public static void main(String[] args) throws Exception {
