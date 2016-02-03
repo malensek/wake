@@ -45,8 +45,8 @@ public class HookServer {
         HookServer hs = new HookServer();
     }
 
-    public HookServer() throws Exception {
-        server = HttpServer.create(new InetSocketAddress(5051), 0);
+    public HookServer(int port) throws Exception {
+        server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/hook", new HookHandler(server));
         server.setExecutor(null);
         server.start();
