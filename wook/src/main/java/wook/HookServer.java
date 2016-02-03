@@ -81,7 +81,15 @@ public class HookServer {
             isr.close();
 
             String data = buf.toString();
+
+            Headers h = t.getRequestHeaders();
+            String contentType = h.get("Content-type").get(0);
+            if (contentType.equals("application/x-www-form-urlencoded")) {
+                data = java.net.URLDecoder.decode(data, "UTF-8");
+            }
+
             System.out.println(data);
+
             t.sendResponseHeaders(202, "test".getBytes().length);
             t.close();
         }
