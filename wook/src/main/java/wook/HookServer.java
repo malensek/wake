@@ -50,7 +50,7 @@ public class HookServer {
 
     public HookServer(int port) throws Exception {
         server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext("/hook", new HookHandler(server));
+        server.createContext("/hook", new HookHandler());
         server.setExecutor(null);
     }
 
@@ -59,12 +59,6 @@ public class HookServer {
     }
 
     static class HookHandler implements HttpHandler {
-
-        private HttpServer server;
-
-        public HookHandler(HttpServer server) {
-            this.server = server;
-        }
 
         public void handle(HttpExchange t) throws IOException {
             InputStreamReader isr = new InputStreamReader(
