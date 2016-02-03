@@ -108,6 +108,6 @@ public class HookServer {
 
         HookServer hs = new HookServer(port);
         hs.start();
-        System.out.println("listening");
+        System.err.println("Listening on port " + port + "...");
     }
 }
