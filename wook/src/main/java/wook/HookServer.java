@@ -31,20 +31,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+
 import com.sun.net.httpserver.Headers;
 
 public class HookServer {
 
     private static int DEFAULT_PORT = 7000;
     private HttpServer server;
-
-    public static void main(String[] args) throws Exception {
-        HookServer hs = new HookServer();
-    }
 
     public HookServer(int port) throws Exception {
         server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -82,5 +84,21 @@ public class HookServer {
             String data = buf.toString();
             /* do something */
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        OptionParser parser = new OptionParser();
+        OptionSpec<Integer> portSpec = parser.acceptsAll(
+                Arrays.asList("p", "port"), "Port to listen on")
+            .withRequiredArg()
+            .ofType(Integer.class)
+            .defaultsTo(DEFAULT_PORT);
+
+        OptionSet opts = parser.parse(args);
+        int port = portSpec.value(opts);
+
+        HookServer hs = new HookServer(port);
+        hs.start();
+        System.out.println("listening");
     }
 }
