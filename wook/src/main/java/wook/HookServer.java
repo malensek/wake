@@ -80,9 +80,10 @@ public class HookServer {
             br.close();
             isr.close();
 
-            System.out.println(buf.toString());
             String data = buf.toString();
-            /* do something */
+            System.out.println(data);
+            t.sendResponseHeaders(202, "test".getBytes().length);
+            t.close();
         }
     }
 
