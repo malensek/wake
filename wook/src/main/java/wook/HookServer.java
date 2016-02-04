@@ -82,7 +82,7 @@ public class HookServer {
 
             System.out.println(data);
 
-            t.sendResponseHeaders(202, "test".getBytes().length);
+            t.sendResponseHeaders(202, 0);
             t.close();
         }
     }
