@@ -76,13 +76,14 @@ public class Launcher {
     private static ExecutionResult cleanOrphans(
             Set<Task> taskList, Path outputDir)
     throws IOException {
+
         Set<WakeFile> generatedOutputs = taskList
             .parallelStream()
             .flatMap(task -> task.outputs().stream())
             .collect(Collectors.toSet());
 
         Set<WakeFile> existingOutputs =
-            Files.walk(outputDir)
+            Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
             .filter(path -> Files.isDirectory(path) != true)
             .map(file -> new WakeFile(file))
             .collect(Collectors.toSet());
