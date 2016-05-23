@@ -1,4 +1,4 @@
-package wake.core;
+package io.sigpipe.wake.core;
 
 import java.util.List;
 
