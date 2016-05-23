@@ -2,11 +2,11 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.exec;
+package io.sigpipe.wake.exec;
 
 import java.util.List;
 
-import wake.core.WakeFile;
+import io.sigpipe.wake.core.WakeFile;
 
 public class ExecutionResult {
 

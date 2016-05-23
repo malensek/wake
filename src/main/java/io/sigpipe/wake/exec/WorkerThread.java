@@ -2,16 +2,16 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.exec;
-
-import wake.core.Plugin;
-import wake.plugins.Plugins;
+package io.sigpipe.wake.exec;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
+
+import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.plugins.Plugins;
 
 public class WorkerThread extends ForkJoinWorkerThread {
 

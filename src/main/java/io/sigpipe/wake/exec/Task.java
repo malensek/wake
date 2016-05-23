@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.exec;
+package io.sigpipe.wake.exec;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.nio.file.attribute.FileTime;
 import java.util.Collection;
 import java.util.List;
 
-import wake.core.Plugin;
-import wake.core.WakeFile;
+import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.WakeFile;
 
 public class Task {
 
