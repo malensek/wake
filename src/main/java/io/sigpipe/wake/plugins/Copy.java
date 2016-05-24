@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.plugins;
+package io.sigpipe.wake.plugins;
 
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -10,8 +10,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import wake.core.Plugin;
-import wake.core.WakeFile;
+import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.WakeFile;
 
 public class Copy implements Plugin {
 

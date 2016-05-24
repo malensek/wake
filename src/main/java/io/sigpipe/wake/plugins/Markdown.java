@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.plugins;
+package io.sigpipe.wake.plugins;
 
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -16,10 +16,10 @@ import org.apache.velocity.app.VelocityEngine;
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 
-import wake.core.Configuration;
-import wake.core.Plugin;
-import wake.core.WakeFile;
-import wake.util.YAMLFrontMatter;
+import io.sigpipe.wake.core.Configuration;
+import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.WakeFile;
+import io.sigpipe.wake.util.YAMLFrontMatter;
 
 /**
  * Plugin to process Markdown (.md) files. This plugin takes a markdown file as
