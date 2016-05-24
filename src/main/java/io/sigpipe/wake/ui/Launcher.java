@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.ui;
+package io.sigpipe.wake.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +18,11 @@ import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
-import wake.core.Configuration;
-import wake.core.WakeFile;
-import wake.exec.ExecutionResult;
-import wake.exec.Task;
-import wake.exec.WorkerThreadFactory;
+import io.sigpipe.wake.core.Configuration;
+import io.sigpipe.wake.core.WakeFile;
+import io.sigpipe.wake.exec.ExecutionResult;
+import io.sigpipe.wake.exec.Task;
+import io.sigpipe.wake.exec.WorkerThreadFactory;
 
 public class Launcher {
 
