@@ -23,6 +23,7 @@ import org.pegdown.PegDownProcessor;
 
 import io.sigpipe.wake.core.Configuration;
 import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.PluginInitializationException;
 import io.sigpipe.wake.core.WakeFile;
 import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
@@ -38,10 +39,15 @@ public class Gallery implements Plugin {
     private WakeFile templateFile;
     private Template template;
 
-    public Gallery() {
+    public Gallery()
+    throws PluginInitializationException {
         Configuration config = Configuration.instance();
 
         templateFile = new WakeFile(config.getTemplateDir(), galleryTemplate);
+        if (templateFile.exists() == false) {
+            throw new PluginInitializationException(
+                    "Could not locate gallery template");
+        }
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("file.resource.loader.path",
                 config.getTemplateDir().getAbsolutePath());
