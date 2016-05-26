@@ -6,6 +6,8 @@ package io.sigpipe.wake.core;
 
 public class PluginInitializationException extends Exception {
 
+    private static final long serialVersionUID = -1792971236098199548L;
+
     public PluginInitializationException() {
         super();
     }
