@@ -17,7 +17,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
-import wake.util.MIME;
+import io.sigpipe.wake.util.MIME;
 
 public class ImageUtils {
 

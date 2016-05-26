@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import wake.util.SharedDatasetAccessor;
-import wake.util.YAMLFrontMatter;
+import io.sigpipe.wake.util.SharedDatasetAccessor;
+import io.sigpipe.wake.util.YAMLFrontMatter;
 
 class DatasetAccessor implements SharedDatasetAccessor {
 
@@ -39,5 +39,6 @@ class DatasetAccessor implements SharedDatasetAccessor {
     public String getDatasetID() {
         return galleryDir.getAbsolutePath();
     }
+
 }
 

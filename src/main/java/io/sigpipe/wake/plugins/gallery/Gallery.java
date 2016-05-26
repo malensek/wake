@@ -21,12 +21,9 @@ import org.apache.velocity.app.VelocityEngine;
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 
-import wake.core.Configuration;
-import wake.core.Plugin;
-import wake.core.WakeFile;
-import wake.util.MIME;
-import wake.util.SharedDataset;
-import wake.util.YAMLFrontMatter;
+import io.sigpipe.wake.core.Configuration;
+import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.WakeFile;
 
 public class Gallery implements Plugin {
 
