@@ -24,6 +24,9 @@ import org.pegdown.PegDownProcessor;
 import io.sigpipe.wake.core.Configuration;
 import io.sigpipe.wake.core.Plugin;
 import io.sigpipe.wake.core.WakeFile;
+import io.sigpipe.wake.util.MIME;
+import io.sigpipe.wake.util.SharedDataset;
+import io.sigpipe.wake.util.YAMLFrontMatter;
 
 public class Gallery implements Plugin {
 
