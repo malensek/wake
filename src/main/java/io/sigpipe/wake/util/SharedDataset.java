@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Matthew Malensek                 *
  * Distributed under the MIT License (see LICENSE.txt) */
 
-package wake.util;
+package io.sigpipe.wake.util;
 
 import java.util.HashMap;
 import java.util.Map;
