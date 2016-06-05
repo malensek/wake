@@ -62,7 +62,7 @@
                                 <Implementation-URL>${project.url}</Implementation-URL>
                                 <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
                                 <Implementation-Version>${project.version}</Implementation-Version>
-                                <Main-Class>wake.ui.Launcher</Main-Class>
+                                <Main-Class>io.sigpipe.wake.ui.Launcher</Main-Class>
                             </manifestEntries>
                         </transformer>
                     </transformers>
