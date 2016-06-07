@@ -87,7 +87,7 @@ public class Launcher {
             .collect(Collectors.toSet());
 
         Set<WakeFile> existingOutputs =
-            Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
+            Files.walk(outputDir)
             .filter(path -> Files.isDirectory(path) != true)
             .map(file -> new WakeFile(file))
             .collect(Collectors.toSet());
