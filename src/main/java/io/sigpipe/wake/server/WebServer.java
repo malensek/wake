@@ -15,7 +15,6 @@ public class WebServer {
     public WebServer(int port) throws IOException {
         http = HttpServer.create(new InetSocketAddress(port), 0);
         http.createContext("/", new RequestHandler());
-
     }
 
     public void listen() {
@@ -36,7 +35,7 @@ public class WebServer {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         WebServer ws = new WebServer(8000);
         ws.listen();
     }
