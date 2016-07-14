@@ -1,5 +1,6 @@
 package io.sigpipe.wake.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -27,11 +28,24 @@ public class WebServer {
         @Override
         public void handle(HttpExchange t) throws IOException {
             System.out.println("Request: " + t.getRequestURI());
-            String response = "This is the response";
-            t.sendResponseHeaders(200, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+            File localFile = new File("." + t.getRequestURI());
+            if (localFile.isDirectory()) {
+                localFile = new File(localFile.getAbsolutePath() + "/index.html");
+            }
+            System.out.println("Local file: " + localFile.getAbsolutePath());
+            if (localFile.exists() == false) {
+                String response = "File not found";
+                t.sendResponseHeaders(404, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            } else {
+                String response = "<html>test</html>";
+                t.sendResponseHeaders(200, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
         }
     }
 
