@@ -27,18 +27,18 @@ public class WebServer {
 
     private class RequestHandler implements HttpHandler {
         @Override
-        public void handle(HttpExchange t) throws IOException {
-            System.out.println("Request: " + t.getRequestURI());
-            File localFile = new File("." + t.getRequestURI());
+        public void handle(HttpExchange exchange) throws IOException {
+            System.out.println("Request: " + exchange.getRequestURI());
+            File localFile = new File("." + exchange.getRequestURI());
             if (localFile.isDirectory()) {
                 localFile = new File(localFile.getAbsolutePath() + "/index.html");
             }
             System.out.println("Local file: " + localFile.getAbsolutePath());
             if (localFile.exists() == false) {
-                reply404(t);
+                reply404(exchange);
             } else {
-                t.sendResponseHeaders(200, localFile.length());
-                OutputStream os = t.getResponseBody();
+                exchange.sendResponseHeaders(200, localFile.length());
+                OutputStream os = exchange.getResponseBody();
                 Files.copy(localFile.toPath(), os);
                 os.close();
             }
