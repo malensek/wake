@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -40,10 +41,9 @@ public class WebServer {
                 os.write(response.getBytes());
                 os.close();
             } else {
-                String response = "<html>test</html>";
-                t.sendResponseHeaders(200, response.length());
+                t.sendResponseHeaders(200, localFile.length());
                 OutputStream os = t.getResponseBody();
-                os.write(response.getBytes());
+                Files.copy(localFile.toPath(), os);
                 os.close();
             }
         }
