@@ -35,17 +35,21 @@ public class WebServer {
             }
             System.out.println("Local file: " + localFile.getAbsolutePath());
             if (localFile.exists() == false) {
-                String response = "File not found";
-                t.sendResponseHeaders(404, response.length());
-                OutputStream os = t.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
+                reply404(t);
             } else {
                 t.sendResponseHeaders(200, localFile.length());
                 OutputStream os = t.getResponseBody();
                 Files.copy(localFile.toPath(), os);
                 os.close();
             }
+        }
+
+        private void reply404(HttpExchange exchange) throws IOException {
+            String message = "File not found!";
+            exchange.sendResponseHeaders(404, message.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(message.getBytes());
+            os.close();
         }
     }
 
