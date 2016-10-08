@@ -10,6 +10,17 @@ import java.util.List;
  */
 public class TemplateUtils {
 
+    /**
+     * Given a VelocityEngine template file, this method retrieves all calls to
+     * the parse() and input() functions and then builds a list of dependent
+     * files. Note that the template file passed in is not included in the list.
+     *
+     * @param config The system configuration to use to locate templates
+     * @param template The VelocityEngine template file to parse
+     *
+     * @return A List of WakeFile instances representing all the dependencies of
+     * the given file.
+     */
     public static List<WakeFile> getTemplateDependencies(
             Configuration config, WakeFile template) {
 
