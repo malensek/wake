@@ -24,6 +24,7 @@ import org.pegdown.PegDownProcessor;
 import io.sigpipe.wake.core.Configuration;
 import io.sigpipe.wake.core.Plugin;
 import io.sigpipe.wake.core.PluginInitializationException;
+import io.sigpipe.wake.core.TemplateUtils;
 import io.sigpipe.wake.core.WakeFile;
 import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
@@ -91,6 +92,11 @@ public class Gallery implements Plugin {
              * (such as an image being deleted) will be caught */
             dependencies.add(file.getParentFile());
             dependencies.add(this.templateFile);
+
+            Configuration config = Configuration.instance();
+            dependencies.addAll(
+                TemplateUtils.getTemplateDependencies(
+                    config, this.templateFile));
         } else {
             dependencies.add(galleryFile(file));
         }
