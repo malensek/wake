@@ -5,6 +5,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * General utility functions for dealing with page templates.
+ */
 public class TemplateUtils {
 
     public static List<WakeFile> getTemplateDependencies(
