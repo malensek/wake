@@ -30,6 +30,9 @@ import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
 import io.sigpipe.wake.util.YAMLFrontMatter;
 
+/**
+ * Plugin to create a gallery of images.
+ */
 public class Gallery implements Plugin {
 
     protected static final String galleryFileName = "gallery_index.md";
