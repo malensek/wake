@@ -18,6 +18,7 @@ import org.pegdown.PegDownProcessor;
 
 import io.sigpipe.wake.core.Configuration;
 import io.sigpipe.wake.core.Plugin;
+import io.sigpipe.wake.core.TemplateUtils;
 import io.sigpipe.wake.core.WakeFile;
 import io.sigpipe.wake.util.YAMLFrontMatter;
 
@@ -46,7 +47,8 @@ public class Markdown implements Plugin {
         WakeFile template = new WakeFile(
                 config.getTemplateDir(), "markdown.vm");
         dependencies.add(template);
-        dependencies.addAll(getTemplateDependencies(config, template));
+        dependencies.addAll(
+                TemplateUtils.getTemplateDependencies(config, template));
 
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("file.resource.loader.path",
@@ -56,65 +58,6 @@ public class Markdown implements Plugin {
                 template.getName());
 
         markdownProcessor = new PegDownProcessor(Extensions.ALL);
-    }
-
-    private List<WakeFile> getTemplateDependencies(
-            Configuration config, WakeFile template) {
-
-        List<WakeFile> dependencies = new ArrayList<>();
-        List<WakeFile> children = new ArrayList<>();
-        String content = "";
-
-        try {
-            content = new String(
-                    Files.readAllBytes(Paths.get(template.getPath())));
-            content = content.replaceAll("\\s+", "");
-        } catch (Exception e) {
-
-        }
-
-        int idx = 0;
-        String search = "#parse(";
-        while (idx >= 0) {
-            int start = content.indexOf(search, idx);
-            int end = content.indexOf(')', start);
-            if (start < 0 || end < 0) {
-                break;
-            }
-            String file = content.substring(start + search.length(), end)
-                .replaceAll("\"", "")
-                .replaceAll("'", "");
-            children.add(new WakeFile(config.getTemplateDir(), file));
-            idx = end;
-        }
-
-        dependencies.addAll(children);
-        for (WakeFile child : children) {
-            List<WakeFile> childDeps = getTemplateDependencies(config, child);
-            dependencies.addAll(childDeps);
-        }
-
-        /* Includes are not processed by the template engine, so they cannot
-         * have children. */
-        idx = 0;
-        search = "#include(";
-        while (idx >= 0) {
-            int start = content.indexOf(search, idx);
-            int end = content.indexOf(')', start);
-            if (start < 0 || end < 0) {
-                break;
-            }
-            String files = content.substring(start + search.length(), end);
-            for (String file : files.split(",")) {
-                file = file
-                    .replaceAll("\"", "")
-                    .replaceAll("'", "");
-                dependencies.add(new WakeFile(config.getTemplateDir(), file));
-            }
-            idx = end;
-        }
-
-        return dependencies;
     }
 
     @Override
