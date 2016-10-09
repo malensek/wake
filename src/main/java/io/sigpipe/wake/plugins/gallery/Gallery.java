@@ -214,8 +214,7 @@ public class Gallery implements Plugin {
     }
 
     /**
-     * Retrieves the gallery definition file (gallery.yaml) associated with the
-     * given file.
+     * Retrieves the gallery definition file associated with the given file.
      */
     private WakeFile galleryFile(File file) {
         File parent = file.getParentFile();
