@@ -99,6 +99,23 @@ public class Launcher {
             orphan.delete();
         }
 
+        int removed = 0;
+        do {
+            List<WakeFile> emptyDirs =
+                Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
+                .filter(Files::isDirectory)
+                .filter(path -> path.toFile().list().length == 0)
+                .map(file -> new WakeFile(file))
+                .collect(Collectors.toList());
+
+            for (WakeFile emptyDir : emptyDirs) {
+                emptyDir.delete();
+            }
+
+            removed = emptyDirs.size();
+            orphans.addAll(emptyDirs);
+        } while (removed > 0);
+
         ExecutionResult er = new ExecutionResult(
                 "Remove", new ArrayList<WakeFile>(orphans));
         return er;
