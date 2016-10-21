@@ -27,6 +27,12 @@ class ImageDescriptor {
                 + "alt=\"" + description + "\">");
         sb.append("</a>");
         sb.append(System.lineSeparator());
+        if (description.equals("") == false) {
+            sb.append("<figcaption itemprop=\"caption description\">");
+            sb.append(description);
+            sb.append("</figcaption>");
+            sb.append(System.lineSeparator());
+        }
         sb.append("</figure>");
         sb.append(System.lineSeparator());
         return sb.toString();
