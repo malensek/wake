@@ -10,7 +10,7 @@ import java.util.Map;
 public class SharedDataset {
 
     private static SharedDataset instance;
-    private Map<String, Map<?, ?>> datasets = new HashMap<>();
+    private Map<String, Dataset> datasets = new HashMap<>();
 
     private SharedDataset() {
 
@@ -23,8 +23,8 @@ public class SharedDataset {
         return instance;
     }
 
-    public synchronized Map<?, ?> getDataset(SharedDatasetAccessor accessor) {
-        Map<?, ?> dataset = datasets.get(accessor.getDatasetID());
+    public synchronized Dataset getDataset(SharedDatasetAccessor accessor) {
+        Dataset dataset = datasets.get(accessor.getDatasetID());
         if (dataset == null) {
             dataset = accessor.createDataset();
         }

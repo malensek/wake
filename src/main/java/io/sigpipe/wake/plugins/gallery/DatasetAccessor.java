@@ -8,9 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
+import io.sigpipe.wake.util.Dataset;
 import io.sigpipe.wake.util.SharedDatasetAccessor;
 import io.sigpipe.wake.util.YAMLFrontMatter;
 
@@ -22,7 +21,7 @@ class DatasetAccessor implements SharedDatasetAccessor {
         this.galleryDir = galleryDir;
     }
 
-    public Map<?, ?> createDataset() {
+    public Dataset createDataset() {
         Path galleryPath = new File(galleryDir.getAbsolutePath()
                 + "/" + Gallery.galleryFileName).toPath();
 
@@ -30,10 +29,10 @@ class DatasetAccessor implements SharedDatasetAccessor {
         try {
             content = new String(Files.readAllBytes(galleryPath));
         } catch (IOException e) {
-            return new HashMap<>();
+            return new Dataset();
         }
 
-        return YAMLFrontMatter.readFrontMatter(content);
+        return new Dataset(YAMLFrontMatter.readFrontMatter(content));
     }
 
     public String getDatasetID() {
