@@ -239,8 +239,19 @@ public class Gallery implements Plugin {
     }
 
     private WakeFile thumbnailOutputFile(WakeFile file) {
+        return thumbnailOutputFile(file, false);
+    }
+
+    private WakeFile thumbnailOutputFile(WakeFile file, boolean retina) {
+        String suffix = ".thumb";
+        if (retina == true) {
+            suffix += "2x";
+        }
+
         WakeFile out = file.toOutputFile();
-        WakeFile thumb = new WakeFile(out.getAbsolutePath() + ".thumb.jpg");
+        WakeFile thumb = new WakeFile(out.getAbsolutePath() + suffix + ".jpg");
+
         return thumb;
     }
+
 }
