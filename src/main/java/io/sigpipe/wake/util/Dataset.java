@@ -25,6 +25,17 @@ public class Dataset extends HashMap<Object, Object> {
         return value;
     }
 
+    public boolean parseBoolean(String parameterName, boolean defaultValue) {
+        boolean value = defaultValue;
+
+        Object o = this.get(parameterName);
+        if (o == null) {
+            return value;
+        }
+
+        value = Boolean.parseBoolean((String) o);
+
+        return value;
     }
 
 }
