@@ -26,6 +26,7 @@ import io.sigpipe.wake.core.Plugin;
 import io.sigpipe.wake.core.PluginInitializationException;
 import io.sigpipe.wake.core.TemplateUtils;
 import io.sigpipe.wake.core.WakeFile;
+import io.sigpipe.wake.util.Dataset;
 import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
 import io.sigpipe.wake.util.YAMLFrontMatter;
@@ -118,6 +119,13 @@ public class Gallery implements Plugin {
             WakeFile thumb = thumbnailOutputFile(file);
             outputs.add(image);
             outputs.add(thumb);
+
+            DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
+            Dataset galleryParams = SharedDataset.instance().getDataset(gda);
+            if (galleryParams.parseBoolean("retina", false) == true) {
+                WakeFile thumb2x = thumbnailOutputFile(file, true);
+                outputs.add(thumb2x);
+            }
         }
 
         return outputs;
