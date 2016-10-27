@@ -17,11 +17,13 @@ public class Dataset extends HashMap<Object, Object> {
         super(map);
     }
 
-    public int intParameter(String parameterName, int defaultValue) {
-        int i = defaultValue;
+    public int parseInt(String parameterName, int defaultValue) {
+        int value = defaultValue;
         try {
-            i = Integer.parseInt((String) this.get(parameterName));
+            value = Integer.parseInt((String) this.get(parameterName));
         } catch (NumberFormatException e) { }
+        return value;
+    }
 
         return i;
     }
