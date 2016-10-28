@@ -31,6 +31,8 @@ import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
 import io.sigpipe.wake.util.YAMLFrontMatter;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 /**
  * Plugin to create a gallery of images.
  */
@@ -186,30 +188,34 @@ public class Gallery implements Plugin {
 
     private List<WakeFile> generateImages(WakeFile file) {
         DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
-        Map<?, ?> galleryParams = SharedDataset.instance().getDataset(gda);
+        Dataset galleryParams = SharedDataset.instance().getDataset(gda);
 
-        int maxSize = Integer.parseInt(
-                (String) galleryParams.get("imageSize"));
-        int thumbSize = Integer.parseInt(
-                (String) galleryParams.get("thumbSize"));
+        int maxSize = galleryParams.parseInt("imageSize", 600);
+        int thumbSize = galleryParams.parseInt("thumbSize", 200);
+        boolean retina = galleryParams.parseBoolean("retina", false);
+
+        if (retina == true) {
+            maxSize = maxSize * 2;
+        }
 
         List<WakeFile> outputs = new ArrayList<>();
         try {
-            BufferedImage img = ImageIO.read(file);
-            BufferedImage resizedImg = ImageUtils.scaleImage(
-                    img, maxSize, maxSize);
-            BufferedImage thumbnailImg = ImageUtils.scaleImage(
-                    img, thumbSize, thumbSize);
-
             WakeFile imageFile = file.toOutputFile();
             WakeFile thumbFile = thumbnailOutputFile(file);
 
-            ImageIO.write(resizedImg, "JPG", imageFile);
-            ImageIO.write(thumbnailImg, "JPG", thumbnailOutputFile(file));
+            Thumbnails.of(file).size(maxSize, maxSize).toFile(imageFile);
+            Thumbnails.of(file).size(thumbSize, thumbSize).toFile(thumbFile);
 
             outputs.add(imageFile);
             outputs.add(thumbFile);
 
+            if (retina == true) {
+                WakeFile thumbFile2x = thumbnailOutputFile(file, true);
+                Thumbnails.of(file)
+                    .size(thumbSize, thumbSize)
+                    .toFile(thumbFile2x);
+                outputs.add(thumbFile2x);
+            }
         } catch (IOException e) {
             return outputs;
         }
