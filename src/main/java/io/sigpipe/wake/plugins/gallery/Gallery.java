@@ -148,6 +148,10 @@ public class Gallery implements Plugin {
     }
 
     private List<WakeFile> generateIndex(WakeFile file) throws IOException {
+        DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
+        Dataset galleryParams = SharedDataset.instance().getDataset(gda);
+        boolean retina = galleryParams.parseBoolean("retina", false);
+
         File galleryDir = file.getParentFile();
         StringBuilder thumbnailHtml = new StringBuilder();
         for (File image : galleryDir.listFiles()) {
@@ -158,9 +162,13 @@ public class Gallery implements Plugin {
             WakeFile imageFile = new WakeFile(image.getAbsolutePath());
 
             ImageDescriptor imgDesc = new ImageDescriptor();
+            imgDesc.dims = ImageUtils.imageDimensions(imageFile);
             imgDesc.fileName = imageFile.getName();
             imgDesc.thumbnail = thumbnailOutputFile(imageFile).getName();
-            imgDesc.dims = ImageUtils.imageDimensions(imageFile);
+            if (retina == true) {
+                imgDesc.thumbnail2x
+                    = thumbnailOutputFile(imageFile, true).getName();
+            }
             thumbnailHtml.append(imgDesc.toHTML());
         }
 
