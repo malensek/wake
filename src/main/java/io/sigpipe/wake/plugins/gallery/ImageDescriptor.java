@@ -12,10 +12,11 @@ class ImageDescriptor {
         = "<figure itemprop=\"associatedMedia\" itemscope "
         + "itemtype=\"http://schema.org/ImageObject\" class=\"galleryFigure\">";
 
+    public String description = "";
+    public Dimension dims;
     public String fileName;
     public String thumbnail;
-    public Dimension dims;
-    public String description = "";
+    public String thumbnail2x = "";
 
     public String toHTML() {
         StringBuilder sb = new StringBuilder();
@@ -23,8 +24,12 @@ class ImageDescriptor {
         sb.append(System.lineSeparator());
         sb.append("<a href=\"" + fileName + "\" itemprop=\"contentUrl\" "
                 + "data-size=\"" + dims.width + "x" + dims.height + "\">");
-        sb.append("<img src=\"" + thumbnail + "\" itemprop=\"thumbnail\" "
-                + "alt=\"" + description + "\">");
+        sb.append("<img src=\"" + thumbnail + "\" itemprop=\"thumbnail\" ");
+        if (this.thumbnail2x.equals("") == false) {
+            sb.append("srcset=\"" + thumbnail + " 1x, "
+                    + thumbnail2x + " 2x\"");
+        }
+        sb.append("alt=\"" + description + "\">");
         sb.append("</a>");
         sb.append(System.lineSeparator());
         if (description.equals("") == false) {
