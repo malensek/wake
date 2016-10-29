@@ -220,7 +220,7 @@ public class Gallery implements Plugin {
             if (retina == true) {
                 WakeFile thumbFile2x = thumbnailOutputFile(file, true);
                 Thumbnails.of(file)
-                    .size(thumbSize, thumbSize)
+                    .size(thumbSize * 2, thumbSize * 2)
                     .toFile(thumbFile2x);
                 outputs.add(thumbFile2x);
             }
