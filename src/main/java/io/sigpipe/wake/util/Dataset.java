@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Dataset extends HashMap<Object, Object> {
 
+    private static final long serialVersionUID = -3527314157809372281L;
+
     public Dataset() {
         super();
     }
