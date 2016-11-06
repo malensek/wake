@@ -10,7 +10,7 @@ class ImageDescriptor {
 
     private static final String figureTag
         = "<figure itemprop=\"associatedMedia\" itemscope "
-        + "itemtype=\"http://schema.org/ImageObject\" class=\"galleryFigure\">";
+        + "itemtype=\"http://schema.org/ImageObject\" class=\"gallery_fig\">";
 
     public String description = "";
     public Dimension dims;
