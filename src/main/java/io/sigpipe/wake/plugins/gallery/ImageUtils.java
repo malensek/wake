@@ -17,6 +17,10 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifIFD0Directory;
+
 import io.sigpipe.wake.util.MIME;
 
 public class ImageUtils {
@@ -91,6 +95,24 @@ public class ImageUtils {
         g.dispose();
 
         return resizedImg;
+    }
+
+    public static String getEXIFImageDescription(File file) {
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(file);
+            ExifIFD0Directory directory
+                = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            String comment = directory.getDescription(
+                    ExifIFD0Directory.TAG_IMAGE_DESCRIPTION);
+            if (comment != null) {
+                return comment;
+            }
+        } catch (Exception e) {
+            /* If the user comment couldn't be read, fail silently and go with
+             * the default description (empty string) */
+        }
+
+        return "";
     }
 
 }
