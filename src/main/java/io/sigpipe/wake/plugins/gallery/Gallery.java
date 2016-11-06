@@ -166,6 +166,7 @@ public class Gallery implements Plugin {
             WakeFile imageFile = new WakeFile(image.getAbsolutePath());
 
             ImageDescriptor imgDesc = new ImageDescriptor();
+            imgDesc.description = ImageUtils.getEXIFImageDescription(imageFile);
             imgDesc.dims = ImageUtils.imageDimensions(imageFile);
             imgDesc.fileName = imageFile.getName();
             imgDesc.thumbnail = thumbnailOutputFile(imageFile).getName();
