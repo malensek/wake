@@ -29,7 +29,7 @@ class ImageDescriptor {
             sb.append("srcset=\"" + thumbnail + " 1x, "
                     + thumbnail2x + " 2x\"");
         }
-        sb.append("alt=\"" + description + "\">");
+        sb.append(" alt=\"" + description + "\">");
         sb.append("</a>");
         sb.append(System.lineSeparator());
         if (description.equals("") == false) {
