@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +156,9 @@ public class Gallery implements Plugin {
 
         File galleryDir = file.getParentFile();
         StringBuilder thumbnailHtml = new StringBuilder();
-        for (File image : galleryDir.listFiles()) {
+        File[] images = galleryDir.listFiles();
+        Arrays.sort(images, Collections.reverseOrder());
+        for (File image : images) {
             String mime = MIME.getMIMEType(image);
             if (mime.startsWith("image") == false) {
                 continue;
