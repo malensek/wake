@@ -33,7 +33,8 @@ class ImageDescriptor {
         sb.append("</a>");
         sb.append(System.lineSeparator());
         if (description.equals("") == false) {
-            sb.append("<figcaption itemprop=\"caption description\">");
+            sb.append("<figcaption itemprop=\"caption description\" ");
+            sb.append("class=\"gallery_description\">");
             sb.append(description);
             sb.append("</figcaption>");
             sb.append(System.lineSeparator());
