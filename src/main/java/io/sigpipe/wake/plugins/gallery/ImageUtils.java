@@ -97,6 +97,14 @@ public class ImageUtils {
         return resizedImg;
     }
 
+    /**
+     * Retrieves the ImageDescription EXIF information from the main image
+     * (IFD0).
+     *
+     * @param file Image file to retrieve EXIF data from
+     *
+     * @return String containing the image description
+     */
     public static String getEXIFImageDescription(File file) {
         try {
             Metadata metadata = ImageMetadataReader.readMetadata(file);
