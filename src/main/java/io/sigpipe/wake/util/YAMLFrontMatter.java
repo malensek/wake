@@ -4,6 +4,8 @@
 
 package io.sigpipe.wake.util;
 
+import java.io.Reader;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,23 @@ public class YAMLFrontMatter {
             } catch (YamlException e) {
                 return yamlData;
             }
+        }
+
+        return yamlData;
+    }
+
+    public static Map<?, ?> readFrontMatter(Reader contentReader) {
+        Map<?, ?> yamlData = new HashMap<>();
+
+        try {
+            char[] header = new char[3];
+            contentReader.read(header);
+            if (new String(header).equals("---")) {
+                YamlReader yaml = new YamlReader(contentReader);
+                yamlData = (Map<?, ?>) yaml.read();
+            }
+        } catch (Exception e) {
+            return yamlData;
         }
 
         return yamlData;
