@@ -4,17 +4,32 @@
 
 package io.sigpipe.wake.plugins;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.pegdown.Extensions;
-import org.pegdown.PegDownProcessor;
+
+import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
+import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.ext.toc.TocExtension;
+import com.vladsch.flexmark.ext.typographic.TypographicExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.parser.ParserEmulationProfile;
+import com.vladsch.flexmark.util.KeepType;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import io.sigpipe.wake.core.Configuration;
 import io.sigpipe.wake.core.Plugin;
@@ -29,33 +44,38 @@ import io.sigpipe.wake.util.YAMLFrontMatter;
  */
 public class Markdown implements Plugin {
 
-    /* Markdown files only have a single dependency other than themselves: the
-     * markdown template. We cache this information here instead of creating a
-     * new list each time requires() is called. */
-    private List<WakeFile> dependencies;
-
-    private VelocityEngine velocityEngine;
-    private PegDownProcessor markdownProcessor;
-    private Template markdownTemplate;
+    private Parser markdownParser;
+    private HtmlRenderer htmlRenderer;
 
     public Markdown() {
-        Configuration config = Configuration.instance();
+        MutableDataSet options = new MutableDataSet();
+        options.setFrom(ParserEmulationProfile.GITHUB_DOC);
+        options.set(Parser.EXTENSIONS, Arrays.asList(
+                AutolinkExtension.create(),
+                AnchorLinkExtension.create(),
+                StrikethroughSubscriptExtension.create(),
+                TablesExtension.create(),
+                TaskListExtension.create(),
+                TocExtension.create(),
+                TypographicExtension.create()
+        ));
 
-        dependencies = new ArrayList<>();
-        WakeFile template = new WakeFile(
-                config.getTemplateDir(), "markdown.vm");
-        dependencies.add(template);
-        dependencies.addAll(
-                TemplateUtils.getTemplateDependencies(config, template));
+        /* GFM table parsing options */
+        options.set(TablesExtension.COLUMN_SPANS, false)
+            .set(TablesExtension.MIN_HEADER_ROWS, 1)
+            .set(TablesExtension.MAX_HEADER_ROWS, 1)
+            .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
+            .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
+            .set(TablesExtension.WITH_CAPTION, false)
+            .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true);
 
-        velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty("file.resource.loader.path",
-                config.getTemplateDir().getAbsolutePath());
-        velocityEngine.init();
-        markdownTemplate = velocityEngine.getTemplate(
-                template.getName());
+        options
+            .set(HtmlRenderer.INDENT_SIZE, 4)
+            .set(HtmlRenderer.OBFUSCATE_EMAIL, true)
+            .set(Parser.REFERENCES_KEEP, KeepType.LAST);
 
-        markdownProcessor = new PegDownProcessor(Extensions.ALL);
+        markdownParser = Parser.builder(options).build();
+        htmlRenderer = HtmlRenderer.builder(options).build();
     }
 
     @Override
@@ -70,7 +90,36 @@ public class Markdown implements Plugin {
 
     @Override
     public List<WakeFile> requires(WakeFile file) {
-        return this.dependencies;
+        Configuration config = Configuration.instance();
+        List<WakeFile> dependencies = new ArrayList<>();
+        WakeFile template = determineTemplate(file);
+        dependencies.add(template);
+        dependencies.addAll(
+                TemplateUtils.getTemplateDependencies(config, template));
+        return dependencies;
+    }
+
+    private WakeFile determineTemplate(WakeFile file) {
+        Configuration config = Configuration.instance();
+        WakeFile defaultTemplate = new WakeFile(
+                config.getTemplateDir(), "markdown.vm");
+        try {
+            FileReader fr = new FileReader(file);
+            Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(fr);
+            if (yamlData.containsKey("template")) {
+                String templateName = (String) yamlData.get("template");
+                WakeFile template = new WakeFile(
+                        config.getTemplateDir(), templateName);
+                if (template.exists()) {
+                    return template;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            /* If the custom template is not found, we use the default. */
+            //TODO warning log?
+        }
+
+        return defaultTemplate;
     }
 
     @Override
@@ -87,6 +136,15 @@ public class Markdown implements Plugin {
 
     @Override
     public List<WakeFile> process(WakeFile file) throws Exception {
+        Configuration config = Configuration.instance();
+        WakeFile template = determineTemplate(file);
+        VelocityEngine velocityEngine = new VelocityEngine();
+        velocityEngine.setProperty("file.resource.loader.path",
+                config.getTemplateDir().getAbsolutePath());
+        velocityEngine.init();
+        Template markdownTemplate = velocityEngine.getTemplate(
+                template.getName());
+
         String content = "";
         content = new String(Files.readAllBytes(file.toPath()));
         Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(content);
@@ -96,7 +154,8 @@ public class Markdown implements Plugin {
 
         Configuration.instance().getTitleMaker().makeTitle(context, file);
 
-        String html = markdownProcessor.markdownToHtml(content);
+        Node document = markdownParser.parse(content);
+        String html = htmlRenderer.render(document);
         context.put("markdown_content", html);
 
         WakeFile outputFile = produces(file).get(0);
