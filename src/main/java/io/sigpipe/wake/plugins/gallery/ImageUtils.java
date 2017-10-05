@@ -8,20 +8,18 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 
+import com.drew.imaging.FileType;
+import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
-
-import io.sigpipe.wake.util.MIME;
 
 public class ImageUtils {
 
@@ -45,19 +43,23 @@ public class ImageUtils {
      * @return Dimensions if found, otherwise null.
      */
     public static Dimension imageDimensions(File image) {
-        String mime = MIME.getMIMEType(image);
-        Iterator<ImageReader> it = ImageIO.getImageReadersByMIMEType(mime);
-        while (it.hasNext()) {
-            ImageReader reader = it.next();
-            try (ImageInputStream iis = new FileImageInputStream(image)) {
-                reader.setInput(iis);
-                int width = reader.getWidth(reader.getMinIndex());
-                int height = reader.getHeight(reader.getMinIndex());
-                return new Dimension(width, height);
-            } catch (IOException e) {
-                continue;
+        try (ImageInputStream in = ImageIO.createImageInputStream(image)) {
+            Iterator<ImageReader> it = ImageIO.getImageReaders(in);
+            while (it.hasNext()) {
+                ImageReader reader = it.next();
+                try {
+                    reader.setInput(in);
+                    return new Dimension(
+                            reader.getWidth(reader.getMinIndex()),
+                            reader.getHeight(reader.getMinIndex()));
+                } finally {
+                    reader.dispose();
+                }
             }
+        } catch (Exception e) {
+            return null;
         }
+
         return null;
     }
 
