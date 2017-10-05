@@ -38,7 +38,6 @@ import io.sigpipe.wake.core.PluginInitializationException;
 import io.sigpipe.wake.core.TemplateUtils;
 import io.sigpipe.wake.core.WakeFile;
 import io.sigpipe.wake.util.Dataset;
-import io.sigpipe.wake.util.MIME;
 import io.sigpipe.wake.util.SharedDataset;
 import io.sigpipe.wake.util.YAMLFrontMatter;
 
@@ -117,11 +116,7 @@ public class Gallery implements Plugin {
         File galleryFile = new File(
                 fileDir.getAbsolutePath() + "/" + galleryFileName);
         if (galleryFile.exists()) {
-            String mimeType = MIME.getMIMEType(file);
-            if (mimeType != null && mimeType.startsWith("image")) {
-                /* File is an image, we want to process it. */
-                return true;
-            }
+            return ImageUtils.isImage(file);
         }
 
         return false;
@@ -195,8 +190,7 @@ public class Gallery implements Plugin {
         File[] images = galleryDir.listFiles();
         Arrays.sort(images, Collections.reverseOrder());
         for (File image : images) {
-            String mime = MIME.getMIMEType(image);
-            if (mime.startsWith("image") == false) {
+            if (ImageUtils.isImage(image) == false) {
                 continue;
             }
             WakeFile imageFile = new WakeFile(image.getAbsolutePath());
