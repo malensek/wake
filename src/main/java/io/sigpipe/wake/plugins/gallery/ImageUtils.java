@@ -29,6 +29,16 @@ public class ImageUtils {
 
     }
 
+    public static boolean isImage(File image) {
+        try {
+            FileType fileType = FileTypeDetector.detectFileType(
+                    new BufferedInputStream(new FileInputStream(image)));
+            return fileType != FileType.Unknown;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * Determines the dimensions of an image without reading the entire file.
      *
