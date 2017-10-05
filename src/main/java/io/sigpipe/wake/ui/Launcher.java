@@ -116,9 +116,7 @@ public class Launcher {
             orphans.addAll(emptyDirs);
         } while (removed > 0);
 
-        ExecutionResult er = new ExecutionResult(
-                "Remove", new ArrayList<WakeFile>(orphans));
-        return er;
+        return new ExecutionResult("Remove", new ArrayList<>(orphans));
     }
 
     private static void setPermissions(Path outputDir)
