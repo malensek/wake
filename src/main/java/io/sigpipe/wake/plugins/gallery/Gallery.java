@@ -4,7 +4,6 @@
 
 package io.sigpipe.wake.plugins.gallery;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
