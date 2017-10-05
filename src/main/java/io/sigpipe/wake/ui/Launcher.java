@@ -51,7 +51,7 @@ public class Launcher {
             return Files.walk(Paths.get(sourcePath))
                 .parallel()
                 .filter(Files::isRegularFile)
-                .map(path -> new Task(path))
+                .map(Task::new)
                 .collect(Collectors.toSet());
         }).get();
 
@@ -59,8 +59,8 @@ public class Launcher {
             try {
                 taskList
                     .parallelStream()
-                    .filter(task -> task.needsExecution())
-                    .map(task -> task.execute())
+                    .filter(Task::needsExecution)
+                    .map(Task::execute)
                     .forEach(System.out::println);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -89,7 +89,7 @@ public class Launcher {
         Set<WakeFile> existingOutputs =
             Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
             .filter(path -> Files.isDirectory(path) != true)
-            .map(file -> new WakeFile(file))
+            .map(WakeFile::new)
             .collect(Collectors.toSet());
 
         Set<WakeFile> orphans = new HashSet<>(existingOutputs);
@@ -105,7 +105,7 @@ public class Launcher {
                 Files.walk(outputDir, FileVisitOption.FOLLOW_LINKS)
                 .filter(Files::isDirectory)
                 .filter(path -> path.toFile().list().length == 0)
-                .map(file -> new WakeFile(file))
+                .map(WakeFile::new)
                 .collect(Collectors.toList());
 
             for (WakeFile emptyDir : emptyDirs) {
