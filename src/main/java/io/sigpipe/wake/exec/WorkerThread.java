@@ -21,7 +21,7 @@ public class WorkerThread extends ForkJoinWorkerThread {
         super(pool);
         for (Class<? extends Plugin> p : Plugins.pluginList) {
             try {
-                registerPlugin(p.newInstance());
+                registerPlugin(p.getConstructor().newInstance());
             } catch (Exception e) {
                 e.printStackTrace();
             }
