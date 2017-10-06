@@ -42,7 +42,7 @@ public class TemplateUtils {
 
         int idx = 0;
         String search = "#parse(";
-        while (idx >= 0) {
+        while (true) {
             int start = content.indexOf(search, idx);
             int end = content.indexOf(')', start);
             if (start < 0 || end < 0) {
@@ -65,7 +65,7 @@ public class TemplateUtils {
          * have children. */
         idx = 0;
         search = "#include(";
-        while (idx >= 0) {
+        while (true) {
             int start = content.indexOf(search, idx);
             int end = content.indexOf(')', start);
             if (start < 0 || end < 0) {
