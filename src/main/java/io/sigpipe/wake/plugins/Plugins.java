@@ -14,11 +14,24 @@ public class Plugins {
 
     public static List<Class<? extends Plugin>> pluginList = new ArrayList<>();
 
+    //TODO wrap this in something to prevent modification
+    public static List<Plugin> pluginCache = new ArrayList<>();
+
     static {
         pluginList.add(Gallery.class);
         pluginList.add(Markdown.class);
         pluginList.add(Symlink.class);
         pluginList.add(Copy.class);
+    }
+
+    static {
+        for (Class<? extends Plugin> clazz : pluginList) {
+            try {
+                pluginCache.add(clazz.getConstructor().newInstance());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
