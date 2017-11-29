@@ -10,45 +10,39 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.util.Collection;
 import java.util.List;
 
 import io.sigpipe.wake.core.Plugin;
 import io.sigpipe.wake.core.WakeFile;
+import io.sigpipe.wake.plugins.Plugins;
 
 public class Task {
 
     private WakeFile taskFile;
-    private String pluginName;
+    private Plugin plugin;
 
     List<WakeFile> outputs = null;
     List<WakeFile> dependencies = null;
 
     public Task(File file) {
         this.taskFile = new WakeFile(file.getAbsolutePath());
-        this.pluginName = determinePlugin();
+        determinePlugin();
     }
 
     public Task(Path path) {
         this.taskFile = new WakeFile(path);
-        this.pluginName = determinePlugin();
+        determinePlugin();
     }
 
-    private String determinePlugin() {
-        Collection<Plugin> plugins
-            = ((WorkerThread) Thread.currentThread()).getPlugins();
-
-        for (Plugin plugin : plugins) {
+    private void determinePlugin() {
+        for (Plugin plugin : Plugins.pluginCache) {
             if (plugin.wants(taskFile)) {
-                return plugin.name();
+                this.plugin = plugin;
+
+                /* Take the first plugin that wants the file: */
+                break;
             }
         }
-
-        return null;
-    }
-
-    private Plugin pluginInstance() {
-        return ((WorkerThread) Thread.currentThread()).getPlugin(pluginName);
     }
 
     public boolean needsExecution() {
@@ -62,8 +56,7 @@ public class Task {
 
     public List<WakeFile> outputs() {
         if (this.outputs == null) {
-            Plugin plugin = pluginInstance();
-            outputs = plugin.produces(taskFile);
+            outputs = this.plugin.produces(taskFile);
         }
 
         return this.outputs;
@@ -71,16 +64,13 @@ public class Task {
 
     public List<WakeFile> dependencies() {
         if (this.dependencies == null) {
-            Plugin plugin = pluginInstance();
-            dependencies = plugin.requires(taskFile);
+            dependencies = this.plugin.requires(taskFile);
         }
 
         return this.dependencies;
     }
 
     public ExecutionResult execute() {
-        Plugin plugin = pluginInstance();
-
         /* Create directories for the output files */
         List<WakeFile> expectedOutputs = outputs();
         for (WakeFile file : expectedOutputs) {
@@ -89,12 +79,12 @@ public class Task {
 
         List<WakeFile> out = null;
         try {
-            out = plugin.process(taskFile);
+            out = this.plugin.process(taskFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new ExecutionResult(pluginName, out);
+        return new ExecutionResult(plugin.name(), out);
     }
 
     private long newestChange(List<WakeFile> files) {
@@ -148,6 +138,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return taskFile.getName() + " [" + pluginName + "]";
+        return taskFile.getName() + " [" + this.plugin.name() + "]";
     }
 }
