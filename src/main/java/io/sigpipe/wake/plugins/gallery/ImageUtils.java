@@ -27,12 +27,28 @@ public class ImageUtils {
 
     }
 
+    /**
+     * Tries to make a best-effort guess as to whether the file passed in is
+     * actually an image.
+     *
+     * @return true if the file is an image
+     */
     public static boolean isImage(File image) {
         try {
             FileType fileType = FileTypeDetector.detectFileType(
                     new BufferedInputStream(new FileInputStream(image)));
             return fileType != FileType.Unknown;
         } catch (Exception e) {
+            /* Fallback option: try to actually read the image */
+            try {
+                BufferedImage img = ImageIO.read(image);
+                if (img != null) {
+                    return true;
+                }
+            } catch (Exception e) {
+                /* Giving up */
+                return false;
+            }
             return false;
         }
     }
