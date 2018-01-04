@@ -30,7 +30,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,17 +38,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
-import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
-import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.ext.toc.TocExtension;
-import com.vladsch.flexmark.ext.typographic.TypographicExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.parser.ParserEmulationProfile;
-import com.vladsch.flexmark.util.KeepType;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import io.sigpipe.wake.core.Configuration;
@@ -69,32 +59,7 @@ public class Markdown implements Plugin {
     private HtmlRenderer htmlRenderer;
 
     public Markdown() {
-        MutableDataSet options = new MutableDataSet();
-        options.setFrom(ParserEmulationProfile.GITHUB_DOC);
-        options.set(Parser.EXTENSIONS, Arrays.asList(
-                AutolinkExtension.create(),
-                AnchorLinkExtension.create(),
-                StrikethroughSubscriptExtension.create(),
-                TablesExtension.create(),
-                TaskListExtension.create(),
-                TocExtension.create(),
-                TypographicExtension.create()
-        ));
-
-        /* GFM table parsing options */
-        options.set(TablesExtension.COLUMN_SPANS, false)
-            .set(TablesExtension.MIN_HEADER_ROWS, 1)
-            .set(TablesExtension.MAX_HEADER_ROWS, 1)
-            .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
-            .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
-            .set(TablesExtension.WITH_CAPTION, false)
-            .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true);
-
-        options
-            .set(HtmlRenderer.INDENT_SIZE, 4)
-            .set(HtmlRenderer.OBFUSCATE_EMAIL, true)
-            .set(Parser.REFERENCES_KEEP, KeepType.LAST);
-
+        MutableDataSet options = Configuration.instance().getMarkdownOptions();
         markdownParser = Parser.builder(options).build();
         htmlRenderer = HtmlRenderer.builder(options).build();
     }
@@ -111,12 +76,12 @@ public class Markdown implements Plugin {
 
     @Override
     public List<WakeFile> requires(WakeFile file) {
-        Configuration config = Configuration.instance();
         List<WakeFile> dependencies = new ArrayList<>();
         WakeFile template = determineTemplate(file);
         dependencies.add(template);
         dependencies.addAll(
-                TemplateUtils.getTemplateDependencies(config, template));
+                TemplateUtils.getTemplateDependencies(
+                    Configuration.instance(), template));
         return dependencies;
     }
 
@@ -173,7 +138,7 @@ public class Markdown implements Plugin {
 
         VelocityContext context = new VelocityContext(yamlData);
 
-        Configuration.instance().getTitleMaker().makeTitle(context, file);
+        config.getTitleMaker().makeTitle(context, file);
 
         Node document = markdownParser.parse(content);
         String html = htmlRenderer.render(document);
