@@ -38,14 +38,14 @@ public class ImageUtils {
             FileType fileType = FileTypeDetector.detectFileType(
                     new BufferedInputStream(new FileInputStream(image)));
             return fileType != FileType.Unknown;
-        } catch (Exception e) {
+        } catch (Exception e1) {
             /* Fallback option: try to actually read the image */
             try {
                 BufferedImage img = ImageIO.read(image);
                 if (img != null) {
                     return true;
                 }
-            } catch (Exception e) {
+            } catch (Exception e2) {
                 /* Giving up */
                 return false;
             }
