@@ -1,7 +1,3 @@
-/* wake - http://sigpipe.io/wake                       *
- * Copyright (c) 2016 Matthew Malensek                 *
- * Distributed under the MIT License (see LICENSE.txt) */
-
 package io.sigpipe.wake.plugins;
 
 import java.io.BufferedReader;
@@ -50,8 +46,7 @@ public class Symlink implements Plugin {
         return outputs;
     }
 
-    @Override
-    public List<WakeFile> process(WakeFile file) throws Exception {
+    @Override public void process(WakeFile file) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String linkDest = br.readLine();
         br.close();
@@ -64,9 +59,5 @@ public class Symlink implements Plugin {
         }
 
         Files.createSymbolicLink(output.toPath(), destFile.toPath());
-
-        List<WakeFile> outputs = new ArrayList<>();
-        outputs.add(output);
-        return outputs;
     }
 }

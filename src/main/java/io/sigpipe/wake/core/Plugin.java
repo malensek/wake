@@ -31,7 +31,8 @@ public interface Plugin {
     /**
      * Processes the given file, producing the outputs specified by the
      * produces() method.
+     *
      * @return List of files produced by the plugin
      */
-    List<WakeFile> process(WakeFile file) throws Exception;
+    void process(WakeFile file) throws Exception;
 }

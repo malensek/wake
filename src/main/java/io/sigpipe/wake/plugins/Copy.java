@@ -1,7 +1,3 @@
-/* wake - http://sigpipe.io/wake                       *
- * Copyright (c) 2016 Matthew Malensek                 *
- * Distributed under the MIT License (see LICENSE.txt) */
-
 package io.sigpipe.wake.plugins;
 
 import java.nio.file.Files;
@@ -47,15 +43,11 @@ public class Copy implements Plugin {
     }
 
     @Override
-    public List<WakeFile> process(WakeFile file) throws Exception {
+    public void process(WakeFile file) throws Exception {
         WakeFile output = file.toOutputFile();
 
         Files.copy(file.toPath(), output.toPath(),
                 StandardCopyOption.REPLACE_EXISTING,
                 LinkOption.NOFOLLOW_LINKS);
-
-        List<WakeFile> outputs = new ArrayList<>();
-        outputs.add(output);
-        return outputs;
     }
 }

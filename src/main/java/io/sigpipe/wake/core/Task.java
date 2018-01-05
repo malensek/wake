@@ -98,14 +98,13 @@ public class Task {
             file.mkParentDir();
         }
 
-        List<WakeFile> out = null;
         try {
-            out = this.plugin.process(taskFile);
+            this.plugin.process(taskFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new ExecutionResult(plugin.name(), out);
+        return new ExecutionResult(plugin.name(), expectedOutputs);
     }
 
     private long newestChange(List<WakeFile> files) {

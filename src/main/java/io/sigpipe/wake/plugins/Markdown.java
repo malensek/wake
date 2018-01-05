@@ -87,8 +87,6 @@ public class Markdown implements Plugin {
 
     private WakeFile determineTemplate(WakeFile file) {
         Configuration config = Configuration.instance();
-        WakeFile defaultTemplate = new WakeFile(
-                config.getTemplateDir(), "markdown.vm");
         try {
             FileReader fr = new FileReader(file);
             Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(fr);
@@ -101,10 +99,12 @@ public class Markdown implements Plugin {
                 }
             }
         } catch (FileNotFoundException e) {
-            /* If the custom template is not found, we use the default. */
             //TODO warning log?
         }
 
+        /* If the custom template is not found, we use the default. */
+        WakeFile defaultTemplate = new WakeFile(
+                config.getTemplateDir(), "markdown.vm");
         return defaultTemplate;
     }
 
@@ -121,7 +121,7 @@ public class Markdown implements Plugin {
     }
 
     @Override
-    public List<WakeFile> process(WakeFile file) throws Exception {
+    public void process(WakeFile file) throws Exception {
         Configuration config = Configuration.instance();
         WakeFile template = determineTemplate(file);
         VelocityEngine velocityEngine = new VelocityEngine();
@@ -148,9 +148,5 @@ public class Markdown implements Plugin {
         FileWriter writer = new FileWriter(outputFile);
         markdownTemplate.merge(context, writer);
         writer.close();
-
-        List<WakeFile> outputs = new ArrayList<>();
-        outputs.add(outputFile);
-        return outputs;
     }
 }

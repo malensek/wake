@@ -152,21 +152,16 @@ public class Gallery implements Plugin {
         return outputs;
     }
 
-    @Override
-    public List<WakeFile> process(WakeFile file) throws Exception {
-        List<WakeFile> outputs;
-
+    @Override public void process(WakeFile file) throws Exception {
         if (isGalleryFile(file)) {
             /* Generate gallery html */
-            outputs = generateIndex(file);
+            generateIndex(file);
         } else {
-            outputs = generateImages(file);
+            generateImages(file);
         }
-
-        return outputs;
     }
 
-    private List<WakeFile> generateIndex(WakeFile file) throws IOException {
+    private void generateIndex(WakeFile file) throws IOException {
         DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
         Dataset galleryParams = SharedDataset.instance().getDataset(gda);
         boolean retina = galleryParams.parseBoolean("retina", false);
@@ -210,13 +205,9 @@ public class Gallery implements Plugin {
         FileWriter writer = new FileWriter(outputFile);
         template.merge(context, writer);
         writer.close();
-
-        List<WakeFile> outputs = new ArrayList<>();
-        outputs.add(outputFile);
-        return outputs;
     }
 
-    private List<WakeFile> generateImages(WakeFile file) {
+    private void generateImages(WakeFile file) {
         DatasetAccessor gda = new DatasetAccessor(file.getParentFile());
         Dataset galleryParams = SharedDataset.instance().getDataset(gda);
 
@@ -228,7 +219,6 @@ public class Gallery implements Plugin {
             maxSize = maxSize * 2;
         }
 
-        List<WakeFile> outputs = new ArrayList<>();
         try {
             WakeFile imageFile = file.toOutputFile();
             WakeFile thumbFile = thumbnailOutputFile(file);
@@ -236,21 +226,15 @@ public class Gallery implements Plugin {
             Thumbnails.of(file).size(maxSize, maxSize).toFile(imageFile);
             Thumbnails.of(file).size(thumbSize, thumbSize).toFile(thumbFile);
 
-            outputs.add(imageFile);
-            outputs.add(thumbFile);
-
             if (retina == true) {
                 WakeFile thumbFile2x = thumbnailOutputFile(file, true);
                 Thumbnails.of(file)
                     .size(thumbSize * 2, thumbSize * 2)
                     .toFile(thumbFile2x);
-                outputs.add(thumbFile2x);
             }
         } catch (IOException e) {
-            return outputs;
+            /* TODO */
         }
-
-        return outputs;
     }
 
     private boolean isGalleryFile(File file) {
@@ -289,5 +273,4 @@ public class Gallery implements Plugin {
 
         return thumb;
     }
-
 }
