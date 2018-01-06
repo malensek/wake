@@ -19,7 +19,9 @@ public class Plugins {
 
     static {
         pluginList.add(Gallery.class);
+        pluginList.add(WeeklySchedule.class);
         pluginList.add(Markdown.class);
+        pluginList.add(CodeListing.class);
         pluginList.add(Symlink.class);
         pluginList.add(Copy.class);
     }
