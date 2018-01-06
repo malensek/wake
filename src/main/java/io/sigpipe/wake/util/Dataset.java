@@ -1,7 +1,3 @@
-/* wake - http://sigpipe.io/wake                       *
- * Copyright (c) 2016 Matthew Malensek                 *
- * Distributed under the MIT License (see LICENSE.txt) */
-
 package io.sigpipe.wake.util;
 
 import java.util.HashMap;
@@ -19,14 +15,6 @@ public class Dataset extends HashMap<Object, Object> {
         super(map);
     }
 
-    public int parseInt(String parameterName, int defaultValue) {
-        int value = defaultValue;
-        try {
-            value = Integer.parseInt((String) this.get(parameterName));
-        } catch (NumberFormatException e) { }
-        return value;
-    }
-
     public boolean parseBoolean(String parameterName, boolean defaultValue) {
         boolean value = defaultValue;
 
@@ -37,6 +25,14 @@ public class Dataset extends HashMap<Object, Object> {
 
         value = Boolean.parseBoolean((String) o);
 
+        return value;
+    }
+
+    public int parseInt(String parameterName, int defaultValue) {
+        int value = defaultValue;
+        try {
+            value = Integer.parseInt((String) this.get(parameterName));
+        } catch (NumberFormatException e) { }
         return value;
     }
 
