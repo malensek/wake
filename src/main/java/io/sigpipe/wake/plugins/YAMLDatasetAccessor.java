@@ -9,6 +9,9 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import io.sigpipe.wake.util.Dataset;
 import io.sigpipe.wake.util.SharedDatasetAccessor;
 
+/**
+ * Dataset accessor for YAML files, or files with YAML front matter.
+ */
 class YAMLDatasetAccessor implements SharedDatasetAccessor {
 
     private File yamlFile;
