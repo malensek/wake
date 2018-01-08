@@ -1,7 +1,3 @@
-/* wake - http://sigpipe.io/wake                       *
- * Copyright (c) 2016 Matthew Malensek                 *
- * Distributed under the MIT License (see LICENSE.txt) */
-
 package io.sigpipe.wake.core;
 
 import java.io.File;
@@ -35,8 +31,6 @@ public class Configuration {
     private File sourceDir = new File("source");
     private File outputDir = new File("output");
     private File templateDir = new File("templates");
-
-    private TitleMaker titleMaker;
 
     private Set<PosixFilePermission> filePerm = null;
     private Set<PosixFilePermission> dirPerm = null;
@@ -74,13 +68,6 @@ public class Configuration {
         outputDir = readDirConfig("output", yamlData);
         templateDir = readDirConfig("templates", yamlData);
 
-        String baseTitle = readSetting("basetitle", yamlData);
-        if (baseTitle != null) {
-            titleMaker = new DashedTitle(baseTitle);
-        } else {
-            titleMaker = new BasicTitle();
-        }
-
         String filePermStr = readPermission("file", yamlData);
         if (filePermStr != null) {
             filePerm = PosixFilePermissions.fromString(filePermStr);
@@ -108,10 +95,6 @@ public class Configuration {
 
     public File getTemplateDir() {
         return templateDir;
-    }
-
-    public TitleMaker getTitleMaker() {
-        return titleMaker;
     }
 
     public Set<PosixFilePermission> getFilePermissions() {

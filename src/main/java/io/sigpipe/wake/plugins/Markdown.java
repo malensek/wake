@@ -135,10 +135,7 @@ public class Markdown implements Plugin {
         content = new String(Files.readAllBytes(file.toPath()));
         Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(content);
         content = YAMLFrontMatter.removeFrontMatter(content);
-
         VelocityContext context = new VelocityContext(yamlData);
-
-        config.getTitleMaker().makeTitle(context, file);
 
         Node document = markdownParser.parse(content);
         String html = htmlRenderer.render(document);
