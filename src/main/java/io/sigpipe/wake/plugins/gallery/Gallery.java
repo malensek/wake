@@ -192,9 +192,7 @@ public class Gallery implements Plugin {
         content = new String(Files.readAllBytes(file.toPath()));
         Map<?, ?> yamlData = YAMLFrontMatter.readFrontMatter(content);
         content = YAMLFrontMatter.removeFrontMatter(content);
-
         VelocityContext context = new VelocityContext(yamlData);
-        Configuration.instance().getTitleMaker().makeTitle(context, file);
 
         Node document = markdownParser.parse(content);
         String html = htmlRenderer.render(document);
