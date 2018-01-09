@@ -38,6 +38,9 @@ import io.sigpipe.wake.util.YAMLFrontMatter;
 
 public class WeeklySchedule implements Plugin {
 
+    protected static final String scheduleFileName = "WeeklySchedule.wake.md";
+    protected static final String scheduleTemplate = "weekly-schedule.vm";
+
     private Pattern weekPattern = Pattern.compile("week([0-9]*)\\.md");
     private Parser markdownParser;
     private HtmlRenderer htmlRenderer;
@@ -50,7 +53,7 @@ public class WeeklySchedule implements Plugin {
         markdownParser = Parser.builder(options).build();
         htmlRenderer = HtmlRenderer.builder(options).build();
 
-        template = new WakeFile(config.getTemplateDir(), "weekly-schedule.vm");
+        template = new WakeFile(config.getTemplateDir(), scheduleTemplate);
     }
 
     @Override
@@ -217,14 +220,14 @@ public class WeeklySchedule implements Plugin {
     }
 
     private boolean isScheduleSettings(File file) {
-        return file.getName().toLowerCase().endsWith("weeklyschedule.wake.md");
+        return file.getName().equals(scheduleFileName);
     }
 
     /**
      * Retrieves the schedule settings file associated with the given file.
      */
     private WakeFile getSettings(File file) {
-        return new WakeFile(file.getParentFile(), "WeeklySchedule.wake.md");
+        return new WakeFile(file.getParentFile(), scheduleFileName);
     }
 
     private List<WakeFile> locateWeekDescriptions(WakeFile settingsFile)
