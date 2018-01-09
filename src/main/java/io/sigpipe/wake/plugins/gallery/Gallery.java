@@ -60,7 +60,7 @@ import net.coobird.thumbnailator.Thumbnails;
  */
 public class Gallery implements Plugin {
 
-    protected static final String galleryFileName = "gallery_index.md";
+    protected static final String galleryFileName = "Gallery.wake.md";
     protected static final String galleryTemplate = "gallery.vm";
 
     private HtmlRenderer htmlRenderer;
