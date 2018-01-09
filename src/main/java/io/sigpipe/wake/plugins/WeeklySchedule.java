@@ -92,7 +92,6 @@ public class WeeklySchedule implements Plugin {
                     Configuration.instance(),
                     this.template));
         try {
-            System.out.println(locateWeekDescriptions(file).size());
             dependencies.addAll(locateWeekDescriptions(file));
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +146,6 @@ public class WeeklySchedule implements Plugin {
         Map<Integer, Map<?, ?>> weeks = new TreeMap<>();
         for (WakeFile weekDescription : locateWeekDescriptions(file)) {
             Map<Object, Object> week = new HashMap<>();
-            System.out.println(weekDescription.getName());
             Matcher matcher = this.weekPattern.matcher(weekDescription.getName());
             matcher.find();
 
