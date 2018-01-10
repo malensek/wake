@@ -17,9 +17,11 @@ import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.jekyll.tag.JekyllTagExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.ext.toc.TocExtension;
 import com.vladsch.flexmark.ext.typographic.TypographicExtension;
+import com.vladsch.flexmark.ext.xwiki.macros.MacroExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
@@ -107,16 +109,22 @@ public class Configuration {
 
     public MutableDataSet getMarkdownOptions() {
         MutableDataSet options = new MutableDataSet();
-        options.setFrom(ParserEmulationProfile.GITHUB_DOC);
+        options.setFrom(ParserEmulationProfile.COMMONMARK);
         options.set(Parser.EXTENSIONS, Arrays.asList(
-                AutolinkExtension.create(),
                 AnchorLinkExtension.create(),
+                AutolinkExtension.create(),
                 StrikethroughSubscriptExtension.create(),
                 TablesExtension.create(),
                 TaskListExtension.create(),
                 TocExtension.create(),
+                MacroExtension.create(),
                 TypographicExtension.create()
         ));
+
+        /* Disable id creation by the Anchorlinks plugin. This is already
+         * accomplished by turning on the Toc plugin (which sets
+         * GENERATE_HEADER_ID to true) */
+        options.set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false);
 
         /* GFM table parsing options */
         options.set(TablesExtension.COLUMN_SPANS, false)
